@@ -1,264 +1,69 @@
-# 🎓 EduQuiz
-
-A modern **Online Examination System** built with **CodeIgniter 4**, **Bootstrap 5**, and **MySQL**. EduQuiz enables examiners to create and conduct secure online examinations, manage students, automate evaluation, and generate detailed performance reports.
-
----
-
-## 📌 Project Overview
-
-EduQuiz is designed to simplify the complete examination process by providing an intuitive platform for creating exams, managing students, conducting assessments, and publishing results.
-
-The system supports two types of users:
-
-- **Examiner**
-- **Student**
-
----
-
-## ✨ Features
-
-### 👨‍🏫 Examiner
-
-- Secure Registration & Login
-- Dashboard
-- Student Management
-- Create & Manage Exams
-- Question Management
-- Assign Students to Exams
-- Email Invitations
-- Conduct Timed Exams
-- Automatic Result Generation
-- Performance Analytics
-- Topper List
-- Download Result Reports
-- Email Result Notification
-
----
-
-### 👨‍🎓 Student
-
-- Secure Login
-- View Assigned Exams
-- Attempt Online Exams
-- Countdown Timer
-- Automatic Submission
-- View Results
-- Receive Result via Email
-
----
-
-## 🔄 System Workflow
-
-```text
-Landing Page
-      │
-      ▼
-Examiner Login / Register
-      │
-      ▼
-Dashboard
-      │
-      ├────────► Manage Students
-      │
-      ├────────► Create Exams
-      │
-      ├────────► Add Questions
-      │
-      ├────────► Assign Students
-      │
-      ├────────► Send Email Invitations
-      │
-      ├────────► View Results
-      │
-      └────────► Performance Analytics
-
-────────────────────────────────────────
-
-Student Receives Email
-      │
-      ▼
-Student Login
-      │
-      ▼
-Available Exams
-      │
-      ▼
-Start Exam
-      │
-      ▼
-Submit Answers
-      │
-      ▼
-Automatic Evaluation
-      │
-      ▼
-Result Published
-```
-
----
-
-## 🛠 Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| CodeIgniter 4 | Backend Framework |
-| PHP 8.2+ | Server-side Language |
-| MySQL | Database |
-| Bootstrap 5 | Frontend UI |
-| HTML5 | Structure |
-| CSS3 | Styling |
-| JavaScript | Client-side Interaction |
-| Composer | Dependency Management |
-| XAMPP | Local Development Server |
+# CodeIgniter 4 Application Starter
 
----
+## What is CodeIgniter?
 
-## 🗄 Database Tables
+CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
+More information can be found at the [official site](https://codeigniter.com).
 
-| Table | Description |
-|-------|-------------|
-| users | Examiner Accounts |
-| students | Student Information |
-| exams | Exam Details |
-| questions | Exam Questions |
-| exam_students | Student Exam Assignments |
-| attempts | Student Attempts |
-| student_answers | Submitted Answers |
-| results | Final Results |
+This repository holds a composer-installable app starter.
+It has been built from the
+[development repository](https://github.com/codeigniter4/CodeIgniter4).
 
----
+More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
 
-## 🚀 Installation
+You can read the [user guide](https://codeigniter.com/user_guide/)
+corresponding to the latest version of the framework.
 
-### 1. Clone Repository
+## Installation & updates
 
-```bash
-git clone https://github.com/<your-username>/eduquiz.git
-```
+`composer create-project codeigniter4/appstarter` then `composer update` whenever
+there is a new release of the framework.
 
-### 2. Open Project
+When updating, check the release notes to see if there are any changes you might need to apply
+to your `app` folder. The affected files can be copied or merged from
+`vendor/codeigniter4/framework/app`.
 
-```bash
-cd eduquiz
-```
+## Setup
 
-### 3. Install Dependencies
+Copy `env` to `.env` and tailor for your app, specifically the baseURL
+and any database settings.
 
-```bash
-composer install
-```
+## Important Change with index.php
 
-### 4. Configure Environment
+`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
+for better security and separation of components.
 
-Rename
+This means that you should configure your web server to "point" to your project's *public* folder, and
+not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
+framework are exposed.
 
-```
-env
-```
+**Please** read the user guide for a better explanation of how CI4 works!
 
-to
+## Repository Management
 
-```
-.env
-```
+We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
+We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
+FEATURE REQUESTS.
 
-Update the database configuration.
+This repository is a "distribution" one, built by our release preparation script.
+Problems with it can be raised on our forum, or as issues in the main repository.
 
-```ini
-database.default.hostname = localhost
-database.default.database = eduquiz
-database.default.username = root
-database.default.password =
-database.default.DBDriver = MySQLi
-database.default.port = 3306
-```
+## Server Requirements
 
----
+PHP version 8.2 or higher is required, with the following extensions installed:
 
-### 5. Create Database
+- [intl](http://php.net/manual/en/intl.requirements.php)
+- [mbstring](http://php.net/manual/en/mbstring.installation.php)
 
-Create a database named
+> [!WARNING]
+> - The end of life date for PHP 7.4 was November 28, 2022.
+> - The end of life date for PHP 8.0 was November 26, 2023.
+> - The end of life date for PHP 8.1 was December 31, 2025.
+> - If you are still using below PHP 8.2, you should upgrade immediately.
+> - The end of life date for PHP 8.2 will be December 31, 2026.
 
-```
-eduquiz
-```
+Additionally, make sure that the following extensions are enabled in your PHP:
 
----
-
-### 6. Run Migrations
-
-```bash
-php spark migrate
-```
-
----
-
-### 7. Start Development Server
-
-```bash
-php spark serve
-```
-
-Visit
-
-```
-http://localhost:8080
-```
-
----
-
-## 📂 Project Structure
-
-```
-app
-│
-├── Controllers
-├── Models
-├── Views
-├── Database
-│   ├── Migrations
-│   └── Seeds
-│
-├── Filters
-├── Helpers
-└── Config
-```
-
----
-
-## 🚧 Development Roadmap
-
-- [x] Project Setup
-- [x] Database Design
-- [x] Landing Page
-- [ ] Authentication
-- [ ] Dashboard
-- [ ] Student Management
-- [ ] Exam Management
-- [ ] Question Management
-- [ ] Student Assignment
-- [ ] Online Examination
-- [ ] Automatic Evaluation
-- [ ] Analytics Dashboard
-- [ ] Email Notifications
-- [ ] Result Reports
-
----
-
-## 📸 Screenshots
-
-Screenshots will be added as the project progresses.
-
----
-
-## 👨‍💻 Author
-
-**Ishwar Bachhav**
-
-Master of Computer Applications (MCA)
-
----
-
-## 📄 License
-
-This project is developed for educational purposes as an MCA academic project.
+- json (enabled by default - don't turn it off)
+- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
+- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library

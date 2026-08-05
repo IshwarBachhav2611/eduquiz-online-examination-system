@@ -2,12 +2,21 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/** @var RouteCollection $routes */
+/**
+ * @var RouteCollection $routes
+ */
+
+// Landing Page
 $routes->get('/', 'HomeController::index');
-$routes->get('/register', 'AuthController::register');
-$routes->post('/register', 'AuthController::registerSave');
 
-$routes->get('/login', 'AuthController::login');
-$routes->post('/login', 'AuthController::loginCheck');
+// Authentication
+$routes->get('/register', 'ExaminerAuthController::register');
+$routes->post('/register', 'ExaminerAuthController::registerPost');
 
-$routes->get('/logout', 'AuthController::logout');
+$routes->get('/login', 'ExaminerAuthController::login');
+$routes->post('/login', 'ExaminerAuthController::loginPost');
+
+$routes->get('/logout', 'ExaminerAuthController::logout');
+
+// Dashboard
+$routes->get('/dashboard', 'DashboardController::index');
