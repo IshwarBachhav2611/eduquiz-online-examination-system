@@ -605,8 +605,7 @@ body{
 
                     </p>
 
-                    <a href="<?= base_url('exam/create') ?>"
-                       class="btn btn-create">
+                    <a href="<?= base_url('exams/create') ?>" class="btn-create">
 
                         <i class="bi bi-plus-circle me-2"></i>
 
@@ -744,7 +743,7 @@ body{
 
 
 <!-- =========================
-                MY EXAMINATIONS
+         MY EXAMINATIONS
 ========================== -->
 
 <h2 class="section-title">
@@ -804,8 +803,8 @@ body{
 
         </button>
 
-        <a href="<?= base_url('exam/create') ?>"
-           class="btn btn-success">
+        <a href="<?= base_url('exams/create') ?>"
+           class="btn btn-create">
 
             <i class="bi bi-plus-circle me-2"></i>
 
@@ -1175,7 +1174,7 @@ body{
         FLOATING CREATE BUTTON
 ====================================================== -->
 
-<a href="<?= base_url('exam/create') ?>"
+<a href="<?= base_url('exams/create') ?>"
    class="floating-btn">
 
     <i class="bi bi-plus-lg"></i>

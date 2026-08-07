@@ -6,41 +6,45 @@ use CodeIgniter\Model;
 
 class QuestionModel extends Model
 {
-    protected $table            = 'questions';
-    protected $primaryKey       = 'id';
+    protected $table = 'questions';
+
+    protected $primaryKey = 'id';
+
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [];
 
-    protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
+    protected $returnType = 'array';
 
-    protected array $casts = [];
-    protected array $castHandlers = [];
+    protected $protectFields = true;
 
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $allowedFields = [
 
-    // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
+        'exam_id',
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+        'question',
+
+        'option_a',
+
+        'option_b',
+
+        'option_c',
+
+        'option_d',
+
+        'correct_option',
+
+        'marks',
+
+    ];
+
+    protected $useTimestamps = true;
+
+    protected $createdField = 'created_at';
+
+    protected $updatedField = 'updated_at';
+
+    protected $validationRules = [];
+
+    protected $validationMessages = [];
+
+    protected $skipValidation = false;
 }
