@@ -91,7 +91,10 @@ class ExamController extends BaseController
 
         ];
 
+        //dd(session()->get());
+        //dd($examData);
         $examModel->insert($examData);
+        
 
         $examId = $examModel->getInsertID();
 
