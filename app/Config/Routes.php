@@ -57,3 +57,5 @@ $routes->get('/questions/edit/(:num)', 'QuestionController::edit/$1');
 $routes->post('/questions/update/(:num)', 'QuestionController::update/$1');
 
 $routes->get('/questions/delete/(:num)', 'QuestionController::delete/$1');
+
+$routes->get('/exams/review/(:num)', 'ExamController::review/$1');

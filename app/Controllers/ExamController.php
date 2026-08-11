@@ -152,4 +152,26 @@ class ExamController extends BaseController
     {
 
     }
+
+    public function review($id)
+    {
+        $exam = $this->examModel->find($id);
+
+        if (!$exam) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $questionModel = new \App\Models\QuestionModel();
+ 
+        $questions = $questionModel
+            ->where('exam_id', $id)
+            ->orderBy('id', 'ASC')
+            ->findAll();
+
+        return view('exams/review', [
+            'exam' => $exam,
+            'questions' => $questions
+        ]);
+    }
 }
+
