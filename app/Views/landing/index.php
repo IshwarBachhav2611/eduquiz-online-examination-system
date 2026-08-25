@@ -278,7 +278,7 @@
 
                 </a>
 
-                <a href="<?= base_url('student/login') ?>" class="btn btn-outline-primary">
+                <a href="<?= base_url('login') ?>" class="btn btn-outline-primary">
 
                 Examiner Login
 

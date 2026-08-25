@@ -34,6 +34,7 @@ class CreateExamStudentsTable extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addKey('exam_id');
         $this->forge->addKey('student_id');
+        $this->forge->addUniqueKey(['exam_id', 'student_id']);
 
         $this->forge->addForeignKey(
             'exam_id',

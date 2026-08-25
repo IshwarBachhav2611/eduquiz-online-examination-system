@@ -1,0 +1,981 @@
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #F8FAFC;
+    font-family: "Segoe UI", sans-serif;
+    color: #0F172A;
+}
+
+:root {
+    --primary: #2563EB;
+    --primary-dark: #1D4ED8;
+
+    --border: #E2E8F0;
+
+    --text: #64748B;
+
+    --card: #FFFFFF;
+
+    --success: #22C55E;
+
+    --warning: #F59E0B;
+
+    --danger: #EF4444;
+
+    --shadow: 0 12px 35px rgba(15, 23, 42, .06);
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar {
+
+    background: #FFFFFF;
+
+    border-bottom: 1px solid var(--border);
+
+    padding: 18px 0;
+}
+
+.navbar-brand {
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    color: var(--primary) !important;
+}
+
+.nav-link {
+
+    margin-left: 22px;
+
+    font-weight: 600;
+
+    color: #475569 !important;
+
+    transition: .25s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+
+    color: var(--primary) !important;
+}
+
+/* =========================================================
+   PROFILE MENU
+========================================================= */
+
+.profile-menu {
+    border: none;
+    background: transparent;
+    padding: 5px 0 5px 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    cursor: pointer;
+}
+
+
+/* Examiner information */
+
+.profile-info {
+    text-align: right;
+    line-height: 1.2;
+}
+
+.profile-info strong {
+    display: block;
+
+    color: #0F172A;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.profile-info small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #64748B;
+
+    font-size: 12px;
+}
+
+
+/* Avatar */
+
+.profile {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+
+    background: #2563EB;
+    color: #FFFFFF;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    flex-shrink: 0;
+}
+
+
+/* Dropdown arrow */
+
+.profile-arrow {
+    color: #64748B;
+    font-size: 12px;
+
+    transition: transform 0.2s ease;
+}
+
+
+/* Rotate arrow when opened */
+
+.profile-menu[aria-expanded="true"] .profile-arrow {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   PROFILE DROPDOWN
+========================================================= */
+
+.profile-dropdown {
+    min-width: 210px;
+
+    margin-top: 10px !important;
+
+    padding: 7px;
+
+    border: 1px solid #E2E8F0;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.10);
+
+    background: #FFFFFF;
+}
+
+
+/* Dropdown item */
+
+.profile-dropdown .dropdown-item {
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    color: #334155;
+
+    font-size: 14px;
+
+    transition: 0.2s ease;
+}
+
+
+.profile-dropdown .dropdown-item:hover {
+
+    background: #F8FAFC;
+
+    color: #0F172A;
+}
+
+
+/* Icons */
+
+.profile-dropdown .dropdown-item i {
+
+    width: 18px;
+
+    font-size: 16px;
+
+    color: #2563EB;
+
+}
+
+
+/* Logout */
+
+.profile-dropdown .logout-item {
+
+    color: #DC2626;
+}
+
+
+.profile-dropdown .logout-item:hover {
+
+    background: #FEF2F2;
+
+    color: #DC2626;
+}
+
+
+.profile-dropdown .logout-item i {
+
+    color: #DC2626;
+}
+
+
+/* Divider */
+
+.profile-dropdown .dropdown-divider {
+
+    margin: 5px 4px;
+
+    border-color: #E2E8F0;
+}
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+.profile {
+
+    width: 48px;
+
+    height: 48px;
+
+    border-radius: 50%;
+
+    background: var(--primary);
+
+    color: #FFFFFF;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard {
+
+    padding: 50px 0 80px;
+}
+
+
+/* =====================================================
+   WELCOME CARD
+===================================================== */
+
+.welcome-card {
+
+    background: #FFFFFF;
+
+    border-radius: 26px;
+
+    padding: 50px;
+
+    border: 1px solid var(--border);
+
+    box-shadow: var(--shadow);
+}
+
+.welcome-card h1 {
+
+    font-size: 42px;
+
+    font-weight: 700;
+}
+
+.welcome-card p {
+
+    margin-top: 20px;
+
+    color: var(--text);
+
+    line-height: 1.9;
+
+    font-size: 17px;
+}
+
+.welcome-image {
+
+    max-height: 230px;
+}
+
+
+/* =====================================================
+   CREATE BUTTON
+===================================================== */
+
+.btn-create {
+
+    margin-top: 30px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    background: var(--primary);
+
+    color: #FFFFFF;
+
+    padding: 14px 30px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: .3s;
+}
+
+.btn-create:hover {
+
+    background: var(--primary-dark);
+
+    color: #FFFFFF;
+
+    transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+.stats {
+
+    margin-top: 40px;
+}
+
+.stat-card {
+
+    height: 100%;
+
+    background: #FFFFFF;
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    transition: .3s;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .03);
+}
+
+.stat-card:hover {
+
+    transform: translateY(-6px);
+
+    box-shadow: var(--shadow);
+}
+
+.icon-box {
+
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 16px;
+
+    background: #EFF6FF;
+
+    color: var(--primary);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 28px;
+
+    margin-bottom: 18px;
+}
+
+.published-icon {
+
+    background: #ECFDF5;
+
+    color: #16A34A;
+}
+
+.draft-icon {
+
+    background: #FFF7ED;
+
+    color: #EA580C;
+}
+
+.question-icon {
+
+    background: #F5F3FF;
+
+    color: #7C3AED;
+}
+
+.stat-card h2 {
+
+    font-size: 34px;
+
+    font-weight: 700;
+}
+
+.stat-card p {
+
+    color: var(--text);
+
+    margin: 0;
+}
+
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.section-title {
+
+    margin-top: 65px;
+
+    margin-bottom: 30px;
+
+    font-size: 30px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.input-group {
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+.input-group-text {
+
+    background: #FFFFFF;
+
+    border-right: none;
+}
+
+.form-control {
+
+    border-left: none;
+
+    box-shadow: none !important;
+}
+
+
+/* =====================================================
+   EXAM CARD
+===================================================== */
+
+.exam-card {
+
+    background: #FFFFFF;
+
+    border: 1px solid var(--border);
+
+    border-radius: 22px;
+
+    padding: 28px;
+
+    transition: .30s;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .03);
+}
+
+.exam-card:hover {
+
+    transform: translateY(-5px);
+
+    box-shadow: var(--shadow);
+}
+
+.exam-card h4 {
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+}
+
+.exam-card strong {
+
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   EXAM CARD LAYOUT
+===================================================== */
+
+.exam-card-content {
+
+    display: grid;
+
+    grid-template-columns: 1fr 370px;
+
+    gap: 40px;
+
+    align-items: center;
+}
+
+
+/* =====================================================
+   EXAM ACTIONS
+===================================================== */
+
+.exam-actions {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    width: 100%;
+
+    min-width: 280px;
+}
+
+.exam-actions .action-btn,
+.exam-actions .delete-form button {
+
+    width: 100%;
+
+    min-height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    border: 1px solid;
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: all .2s ease;
+
+    background: #FFFFFF;
+}
+
+
+/* =====================================================
+   REVIEW BUTTON
+===================================================== */
+
+.review-btn {
+
+    color: #2563EB;
+
+    border-color: #2563EB;
+}
+
+.review-btn:hover {
+
+    background: #2563EB;
+
+    color: #FFFFFF;
+}
+
+
+/* =====================================================
+   EDIT BUTTON
+===================================================== */
+
+.edit-btn {
+
+    color: #475569;
+
+    border-color: #94A3B8;
+}
+
+.edit-btn:hover {
+
+    background: #475569;
+
+    color: #FFFFFF;
+}
+
+
+/* =====================================================
+   SHARE BUTTON
+===================================================== */
+
+.share-btn {
+
+    color: #7C3AED;
+
+    border-color: #7C3AED;
+}
+
+.share-btn:hover {
+
+    background: #7C3AED;
+
+    color: #FFFFFF;
+}
+
+
+/* =====================================================
+   RESULTS BUTTON
+===================================================== */
+
+.result-btn {
+
+    color: #059669;
+
+    border-color: #059669;
+}
+
+.result-btn:hover:not(:disabled) {
+
+    background: #059669;
+
+    color: #FFFFFF;
+}
+
+
+/* =====================================================
+   DISABLED RESULTS
+===================================================== */
+
+.result-btn:disabled,
+.result-btn.disabled {
+
+    color: #94A3B8;
+
+    border-color: #CBD5E1;
+
+    background: #F1F5F9;
+
+    cursor: not-allowed;
+
+    opacity: .8;
+}
+
+
+/* =====================================================
+   DELETE FORM
+===================================================== */
+
+.delete-form {
+
+    width: 100%;
+
+    margin: 0;
+}
+
+
+/* =====================================================
+   DELETE BUTTON
+===================================================== */
+
+.delete-btn {
+    color: #DC2626;
+    border-color: #DC2626 !important;
+    background: #FFFFFF;
+}
+
+.delete-btn:hover {
+    background: #DC2626 !important;
+    color: #FFFFFF !important;
+}
+
+
+/* =====================================================
+   EXAM STATUS BADGE
+===================================================== */
+
+.status-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 10px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    margin-left: 8px;
+}
+
+.status-published {
+
+    background: #DCFCE7;
+
+    color: #15803D;
+}
+
+.status-draft {
+
+    background: #FFF7ED;
+
+    color: #C2410C;
+}
+
+.status-completed {
+
+    background: #EFF6FF;
+
+    color: #1D4ED8;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-state {
+
+    background: #FFFFFF;
+
+    border: 1px dashed #CBD5E1;
+
+    border-radius: 22px;
+
+    padding: 70px 30px;
+
+    text-align: center;
+}
+
+.empty-icon {
+
+    width: 75px;
+
+    height: 75px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 20px;
+
+    background: #EFF6FF;
+
+    color: var(--primary);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 34px;
+}
+
+.empty-state h4 {
+
+    font-weight: 700;
+}
+
+.empty-state p {
+
+    color: var(--text);
+
+    margin: 10px 0 25px;
+}
+
+
+/* =====================================================
+   FLOATING BUTTON
+===================================================== */
+
+.floating-btn {
+
+    position: fixed;
+
+    right: 30px;
+
+    bottom: 30px;
+
+    width: 65px;
+
+    height: 65px;
+
+    background: var(--primary);
+
+    color: #FFFFFF;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-decoration: none;
+
+    font-size: 28px;
+
+    box-shadow: 0 18px 40px rgba(37, 99, 235, .35);
+
+    transition: .3s;
+
+    z-index: 999;
+}
+
+.floating-btn:hover {
+
+    background: var(--primary-dark);
+
+    color: #FFFFFF;
+
+    transform: scale(1.08);
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 992px) {
+
+    .welcome-card {
+
+        padding: 35px;
+    }
+
+    .welcome-card h1 {
+
+        font-size: 34px;
+    }
+
+    .navbar-nav {
+
+        margin-top: 20px;
+    }
+
+    .nav-link {
+
+        margin-left: 0;
+    }
+
+    .exam-card-content {
+
+        grid-template-columns: 1fr;
+
+        gap: 28px;
+    }
+
+    .exam-actions {
+
+        min-width: 100%;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .dashboard {
+
+        padding: 30px 0 70px;
+    }
+
+    .welcome-card {
+
+        text-align: center;
+
+        padding: 28px;
+    }
+
+    .welcome-image {
+
+        margin-top: 30px;
+    }
+
+    .floating-btn {
+
+        width: 58px;
+
+        height: 58px;
+
+        right: 20px;
+
+        bottom: 20px;
+    }
+
+    .exam-card {
+
+        padding: 22px;
+    }
+
+    .exam-card-content {
+
+        grid-template-columns: 1fr;
+
+        gap: 25px;
+    }
+
+    .exam-actions {
+
+        width: 100%;
+
+        min-width: 100%;
+    }
+
+    .exam-actions .action-btn,
+    .exam-actions .delete-form button {
+
+        min-height: 44px;
+    }
+}

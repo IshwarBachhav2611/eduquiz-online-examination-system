@@ -685,7 +685,7 @@
 
     <div class="card-box p-4 mt-4">
 
-        <div class="d-flex justify-content-between align-items-center">
+         <div class="d-flex justify-content-between align-items-center">
 
             <div>
                 <h5 class="fw-bold mb-1">

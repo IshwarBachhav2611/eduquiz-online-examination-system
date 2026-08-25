@@ -3,490 +3,74 @@
 
 <head>
 
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>Examiner Dashboard | EduQuiz</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet">
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-      rel="stylesheet">
-
-<style>
-
-*{
-
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-
-}
-
-html{
-
-    scroll-behavior:smooth;
-
-}
-
-body{
-
-    background:#F8FAFC;
-    font-family:'Segoe UI',sans-serif;
-    color:#0F172A;
-
-}
-
-:root{
-
-    --primary:#2563EB;
-    --primary-dark:#1D4ED8;
-    --border:#E2E8F0;
-    --text:#64748B;
-    --card:#FFFFFF;
-    --success:#22C55E;
-    --warning:#F59E0B;
-    --danger:#EF4444;
-    --shadow:0 12px 35px rgba(15,23,42,.06);
-
-}
-
-
-/*=========================
-        NAVBAR
-=========================*/
-
-.navbar{
-
-    background:#fff;
-    border-bottom:1px solid var(--border);
-    padding:18px 0;
-
-}
-
-.navbar-brand{
-
-    font-size:30px;
-    font-weight:700;
-    color:var(--primary)!important;
-
-}
-
-.nav-link{
-
-    margin-left:22px;
-    font-weight:600;
-    color:#475569!important;
-    transition:.25s;
-
-}
-
-.nav-link:hover{
-
-    color:var(--primary)!important;
-
-}
-
-
-/*=========================
-        PROFILE
-=========================*/
-
-.profile{
-
-    width:48px;
-    height:48px;
-    border-radius:50%;
-    background:var(--primary);
-    color:#fff;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:18px;
-    font-weight:700;
-
-}
-
-
-/*=========================
-        DASHBOARD
-=========================*/
-
-.dashboard{
-
-    padding:50px 0 80px;
-
-}
-
-
-/*=========================
-        WELCOME CARD
-=========================*/
-
-.welcome-card{
-
-    background:#fff;
-    border-radius:26px;
-    padding:50px;
-    border:1px solid var(--border);
-    box-shadow:var(--shadow);
-
-}
-
-.welcome-card h1{
-
-    font-size:42px;
-    font-weight:700;
-
-}
-
-.welcome-card p{
-
-    margin-top:20px;
-    color:var(--text);
-    line-height:1.9;
-    font-size:17px;
-
-}
-
-
-/*=========================
-        BUTTON
-=========================*/
-
-.btn-create{
-
-    margin-top:30px;
-
-    background:var(--primary);
-    color:#fff;
-
-    padding:14px 30px;
-
-    border:none;
-
-    border-radius:14px;
-
-    font-weight:600;
-
-    transition:.3s;
-
-}
-
-.btn-create:hover{
-
-    background:var(--primary-dark);
-    color:#fff;
-
-}
-
-
-/*=========================
-        STATISTICS
-=========================*/
-
-.stats{
-
-    margin-top:40px;
-
-}
-
-.stat-card{
-
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:25px;
-    transition:.3s;
-    box-shadow:0 5px 20px rgba(0,0,0,.03);
-
-}
-
-.stat-card:hover{
-
-    transform:translateY(-6px);
-    box-shadow:var(--shadow);
-
-}
-
-.icon-box{
-
-    width:60px;
-    height:60px;
-
-    border-radius:16px;
-
-    background:#EFF6FF;
-
-    color:var(--primary);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:28px;
-
-    margin-bottom:18px;
-
-}
-
-.stat-card h2{
-
-    font-size:34px;
-    font-weight:700;
-
-}
-
-.stat-card p{
-
-    color:var(--text);
-    margin:0;
-
-}
-
-
-/*=========================
-        SECTION TITLE
-=========================*/
-
-.section-title{
-
-    margin-top:65px;
-    margin-bottom:30px;
-
-    font-size:30px;
-    font-weight:700;
-
-}
-
-
-/*=========================
-        SEARCH
-=========================*/
-
-.input-group{
-
-    border-radius:14px;
-    overflow:hidden;
-
-}
-
-.input-group-text{
-
-    background:#fff;
-    border-right:none;
-
-}
-
-.form-control{
-
-    border-left:none;
-
-    box-shadow:none!important;
-
-}
-
-
-/*=========================
-        EXAM CARD
-=========================*/
-
-.exam-card{
-
-    background:#fff;
-
-    border:1px solid var(--border);
-
-    border-radius:22px;
-
-    padding:28px;
-
-    transition:.30s;
-
-    box-shadow:0 5px 20px rgba(0,0,0,.03);
-
-}
-
-.exam-card:hover{
-
-    transform:translateY(-5px);
-
-    box-shadow:var(--shadow);
-
-}
-
-.exam-card h4{
-
-    font-weight:700;
-
-}
-
-.exam-card hr{
-
-    margin:22px 0;
-
-}
-
-.exam-card strong{
-
-    font-size:18px;
-
-}
-
-
-/*=========================
-        BUTTONS
-=========================*/
-
-.btn{
-
-    border-radius:12px;
-
-}
-
-
-/*=========================
-        FLOATING BUTTON
-=========================*/
-
-.floating-btn{
-
-    position:fixed;
-
-    right:30px;
-
-    bottom:30px;
-
-    width:65px;
-
-    height:65px;
-
-    background:var(--primary);
-
-    color:#fff;
-
-    border-radius:50%;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    text-decoration:none;
-
-    font-size:28px;
-
-    box-shadow:0 18px 40px rgba(37,99,235,.35);
-
-    transition:.3s;
-
-    z-index:999;
-
-}
-
-.floating-btn:hover{
-
-    background:var(--primary-dark);
-
-    color:#fff;
-
-    transform:scale(1.08);
-
-}
-
-
-/*=========================
-        RESPONSIVE
-=========================*/
-
-@media(max-width:992px){
-
-    .welcome-card{
-
-        padding:35px;
-
-    }
-
-    .welcome-card h1{
-
-        font-size:34px;
-
-    }
-
-    .navbar-nav{
-
-        margin-top:20px;
-
-    }
-
-}
-
-@media(max-width:768px){
-
-    .floating-btn{
-
-        width:58px;
-        height:58px;
-
-        right:20px;
-        bottom:20px;
-
-    }
-
-    .welcome-card{
-
-        text-align:center;
-
-    }
-
-}
-
-</style>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Examiner Dashboard | EduQuiz</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+    <!-- Dashboard CSS -->
+    <link
+        rel="stylesheet"
+        href="<?= base_url('assets/css/dashboard.css') ?>">
 
 </head>
 
 <body>
 
-<!-- =========================
-        NAVIGATION BAR
-========================== -->
-
+<!-- =====================================================
+     NAVIGATION BAR
+====================================================== -->
 <nav class="navbar navbar-expand-lg">
 
     <div class="container">
 
+        <!-- Logo -->
         <a class="navbar-brand"
-           href="#">
-
+           href="<?= base_url('dashboard') ?>">
             EduQuiz
-
         </a>
 
+
+        <!-- Mobile Toggle -->
         <button
             class="navbar-toggler"
+            type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#menu">
+            data-bs-target="#menu"
+            aria-controls="menu"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
 
             <span class="navbar-toggler-icon"></span>
 
         </button>
 
+
+        <!-- Navigation -->
         <div
             class="collapse navbar-collapse"
             id="menu">
+
 
             <ul class="navbar-nav mx-auto">
 
                 <li class="nav-item">
 
-                    <a class="nav-link active"
-                       href="#">
+                    <a
+                        class="nav-link active"
+                        href="<?= base_url('dashboard') ?>">
 
                         Dashboard
 
@@ -494,10 +78,12 @@ body{
 
                 </li>
 
+
                 <li class="nav-item">
 
-                    <a class="nav-link"
-                       href="#">
+                    <a
+                        class="nav-link"
+                        href="<?= base_url('exams') ?>">
 
                         Examinations
 
@@ -505,10 +91,12 @@ body{
 
                 </li>
 
+
                 <li class="nav-item">
 
-                    <a class="nav-link"
-                       href="#">
+                    <a
+                        class="nav-link"
+                        href="<?= base_url('students') ?>">
 
                         Students
 
@@ -516,10 +104,12 @@ body{
 
                 </li>
 
+
                 <li class="nav-item">
 
-                    <a class="nav-link"
-                       href="#">
+                    <a
+                        class="nav-link"
+                        href="<?= base_url('results') ?>">
 
                         Results
 
@@ -529,33 +119,104 @@ body{
 
             </ul>
 
-            <div class="d-flex align-items-center">
 
-                <div class="text-end me-3">
+            <!-- Examiner Profile Dropdown -->
 
-                    <strong>
+            <div class="dropdown">
 
-                        <?= session('name') ?>
+                <button
+                    class="profile-menu"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
 
-                    </strong>
 
-                    <br>
+                    <!-- Examiner Information -->
 
-                    <small class="text-muted">
+                    <div class="profile-info">
 
-                        <?= session('organization') ?>
+                        <strong>
+                            <?= esc(session('name')) ?>
+                        </strong>
 
-                    </small>
+                        <small>
+                            <?= esc(session('organization')) ?>
+                        </small>
 
-                </div>
+                    </div>
 
-                <div class="profile">
 
-                    <?= strtoupper(substr(session('name'),0,1)) ?>
+                    <!-- Avatar -->
 
-                </div>
+                    <div class="profile">
+
+                        <?= strtoupper(
+                            substr(session('name'), 0, 1)
+                        ) ?>
+
+                    </div>
+
+
+                    <!-- Dropdown Icon -->
+
+                    <i class="bi bi-chevron-down profile-arrow"></i>
+
+
+                </button>
+
+
+                <!-- Dropdown -->
+
+                <ul class="dropdown-menu dropdown-menu-end profile-dropdown">
+
+
+                    <!-- Update Profile -->
+
+                    <li>
+
+                        <a
+                            class="dropdown-item"
+                            href="<?= base_url('profile') ?>">
+
+                            <i class="bi bi-person"></i>
+
+                            <span>
+                                Update Profile
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+
+                    <!-- Logout -->
+
+                    <li>
+
+                        <a
+                            class="dropdown-item logout-item"
+                            href="<?= base_url('logout') ?>">
+
+                            <i class="bi bi-box-arrow-right"></i>
+
+                            <span>
+                                Logout
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                </ul>
 
             </div>
+
 
         </div>
 
@@ -563,19 +224,18 @@ body{
 
 </nav>
 
-
-<!-- =========================
-        DASHBOARD
-========================== -->
+<!-- =====================================================
+     DASHBOARD
+====================================================== -->
 
 <div class="dashboard">
 
     <div class="container">
 
 
-        <!-- =========================
-                WELCOME CARD
-        ========================== -->
+        <!-- =================================================
+             WELCOME CARD
+        ================================================== -->
 
         <div class="welcome-card">
 
@@ -589,23 +249,27 @@ body{
 
                     </span>
 
+
                     <h1>
 
                         Good Evening,
-                        <?= session('name') ?> 👋
+                        <?= esc(session('name')) ?> 👋
 
                     </h1>
 
+
                     <p>
 
-                        Create examinations, invite students,
-                        automatically evaluate submissions,
-                        generate detailed reports,
-                        and manage every examination from one dashboard.
+                        Create examinations, manage questions,
+                        invite students, evaluate submissions,
+                        and manage your examinations from one place.
 
                     </p>
 
-                    <a href="<?= base_url('exams/create') ?>" class="btn-create">
+
+                    <a
+                        href="<?= base_url('exams/create') ?>"
+                        class="btn-create">
 
                         <i class="bi bi-plus-circle me-2"></i>
 
@@ -615,12 +279,13 @@ body{
 
                 </div>
 
+
                 <div class="col-lg-4 text-center">
 
                     <img
                         src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png"
-                        class="img-fluid"
-                        style="max-height:230px;">
+                        class="img-fluid welcome-image"
+                        alt="Examination">
 
                 </div>
 
@@ -629,11 +294,14 @@ body{
         </div>
 
 
-        <!-- =========================
-                STATISTICS
-        ========================== -->
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
 
         <div class="row stats g-4">
+
+
+            <!-- Total Exams -->
 
             <div class="col-lg-3 col-md-6">
 
@@ -646,93 +314,86 @@ body{
                     </div>
 
                     <h2>
-
-                        12
-
+                        <?= esc($totalExams) ?>
                     </h2>
 
                     <p>
-
                         Total Examinations
-
                     </p>
 
                 </div>
 
             </div>
 
+
+            <!-- Published -->
+
             <div class="col-lg-3 col-md-6">
 
                 <div class="stat-card">
 
-                    <div class="icon-box">
+                    <div class="icon-box published-icon">
+
+                        <i class="bi bi-check-circle"></i>
+
+                    </div>
+
+                    <h2>
+                        <?= esc($publishedExams) ?>
+                    </h2>
+
+                    <p>
+                        Published Exams
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Draft -->
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="icon-box draft-icon">
 
                         <i class="bi bi-pencil-square"></i>
 
                     </div>
 
                     <h2>
-
-                        3
-
+                        <?= esc($draftExams) ?>
                     </h2>
 
                     <p>
-
                         Draft Exams
-
                     </p>
 
                 </div>
 
             </div>
+
+
+            <!-- Questions -->
 
             <div class="col-lg-3 col-md-6">
 
                 <div class="stat-card">
 
-                    <div class="icon-box">
+                    <div class="icon-box question-icon">
 
-                        <i class="bi bi-calendar-check"></i>
-
-                    </div>
-
-                    <h2>
-
-                        5
-
-                    </h2>
-
-                    <p>
-
-                        Scheduled
-
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-
-                <div class="stat-card">
-
-                    <div class="icon-box">
-
-                        <i class="bi bi-award"></i>
+                        <i class="bi bi-question-circle"></i>
 
                     </div>
 
                     <h2>
-
-                        4
-
+                        <?= esc($totalQuestions) ?>
                     </h2>
 
                     <p>
-
-                        Completed
-
+                        Total Questions
                     </p>
 
                 </div>
@@ -742,423 +403,356 @@ body{
         </div>
 
 
-<!-- =========================
-         MY EXAMINATIONS
-========================== -->
+        <!-- =================================================
+             MY EXAMINATIONS
+        ================================================== -->
 
-<h2 class="section-title">
+        <div id="examinations">
 
-    My Examinations
+            <h2 class="section-title">
 
-</h2>
+                My Examinations
 
-<!-- ==========================================
-        SEARCH + FILTER + CREATE BUTTON
-=========================================== -->
-
-<div class="row align-items-center mb-4">
-
-    <div class="col-lg-5 mb-3">
-
-        <div class="input-group">
-
-            <span class="input-group-text bg-white">
-
-                <i class="bi bi-search"></i>
-
-            </span>
-
-            <input
-                type="text"
-                class="form-control"
-                placeholder="Search examinations...">
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-7 text-lg-end">
-
-        <button class="btn btn-primary me-2">
-
-            All
-
-        </button>
-
-        <button class="btn btn-outline-secondary me-2">
-
-            Draft
-
-        </button>
-
-        <button class="btn btn-outline-warning me-2">
-
-            Scheduled
-
-        </button>
-
-        <button class="btn btn-outline-success me-3">
-
-            Completed
-
-        </button>
-
-        <a href="<?= base_url('exams/create') ?>"
-           class="btn btn-create">
-
-            <i class="bi bi-plus-circle me-2"></i>
-
-            Create Examination
-
-        </a>
-
-    </div>
-
-</div>
+            </h2>
 
 
+            <!-- Search + Create -->
 
-<!-- ==========================================
-        EXAMINATION LIST
-=========================================== -->
+            <div class="row align-items-center mb-4">
 
-<div class="exam-card mb-4">
+                <div class="col-lg-7 mb-3 mb-lg-0">
 
-    <div class="row align-items-center">
+                    <div class="input-group">
 
-        <div class="col-lg-8">
+                        <span class="input-group-text">
 
-            <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-search"></i>
 
-                <h4 class="mb-0 fw-bold">
+                        </span>
 
-                    Java Programming Assessment
+                        <input
+                            type="text"
+                            id="examSearch"
+                            class="form-control"
+                            placeholder="Search examinations...">
 
-                </h4>
-
-                <span class="badge bg-success ms-3">
-
-                    Scheduled
-
-                </span>
-
-            </div>
-
-            <p class="text-muted mb-4">
-
-                Java Fundamentals • OOP • Collections • Exception Handling • Multithreading
-
-            </p>
-
-            <div class="row">
-
-                <div class="col-md-2">
-
-                    <small class="text-muted d-block">
-
-                        Questions
-
-                    </small>
-
-                    <strong>
-
-                        30
-
-                    </strong>
+                    </div>
 
                 </div>
 
-                <div class="col-md-2">
 
-                    <small class="text-muted d-block">
+                <div class="col-lg-5 text-lg-end">
 
-                        Students
+                    <a
+                        href="<?= base_url('exams/create') ?>"
+                        class="btn btn-primary">
 
-                    </small>
+                        <i class="bi bi-plus-circle me-2"></i>
 
-                    <strong>
+                        Create Examination
 
-                        42
-
-                    </strong>
-
-                </div>
-
-                <div class="col-md-2">
-
-                    <small class="text-muted d-block">
-
-                        Duration
-
-                    </small>
-
-                    <strong>
-
-                        60 Min
-
-                    </strong>
-
-                </div>
-
-                <div class="col-md-2">
-
-                    <small class="text-muted d-block">
-
-                        Marks
-
-                    </small>
-
-                    <strong>
-
-                        100
-
-                    </strong>
-
-                </div>
-
-                <div class="col-md-2">
-
-                    <small class="text-muted d-block">
-
-                        Exam Date
-
-                    </small>
-
-                    <strong>
-
-                        15 Aug
-
-                    </strong>
-
-                </div>
-
-                <div class="col-md-2">
-
-                    <small class="text-muted d-block">
-
-                        Created
-
-                    </small>
-
-                    <strong>
-
-                        Today
-
-                    </strong>
+                    </a>
 
                 </div>
 
             </div>
 
-        </div>
 
+            <!-- =================================================
+                 DYNAMIC EXAMINATION LIST
+            ================================================== -->
 
+            <div id="examList">
 
-        <div class="col-lg-4">
 
-            <div class="d-grid gap-2">
+                <?php if (empty($exams)): ?>
 
-                <button class="btn btn-primary">
+                    <!-- Empty State -->
 
-                    <i class="bi bi-question-circle me-2"></i>
+                    <div class="empty-state">
 
-                    Manage Questions
+                        <div class="empty-icon">
 
-                </button>
+                            <i class="bi bi-journal-x"></i>
 
-                <button class="btn btn-outline-primary">
+                        </div>
 
-                    <i class="bi bi-people me-2"></i>
+                        <h4>
+                            No examinations yet
+                        </h4>
 
-                    Student List
+                        <p>
+                            Create your first examination to get started.
+                        </p>
 
-                </button>
+                        <a
+                            href="<?= base_url('exams/create') ?>"
+                            class="btn btn-primary">
 
-                <button class="btn btn-outline-warning">
+                            <i class="bi bi-plus-circle me-2"></i>
 
-                    <i class="bi bi-envelope-paper me-2"></i>
+                            Create Examination
 
-                    Send Invitations
+                        </a>
 
-                </button>
+                    </div>
 
-                <button class="btn btn-outline-success">
 
-                    <i class="bi bi-bar-chart me-2"></i>
+                <?php else: ?>
 
-                    View Results
 
-                </button>
+                    <?php foreach ($exams as $exam): ?>
 
-                <div class="d-flex gap-2">
+                        <div
+                            class="exam-card mb-4"
+                            data-exam-title="<?= esc(strtolower($exam['title'])) ?>"
+                            data-exam-subject="<?= esc(strtolower($exam['subject'])) ?>">
 
-                    <button class="btn btn-outline-secondary w-100">
+                            <div class="row align-items-center">
 
-                        <i class="bi bi-pencil-square me-2"></i>
 
-                        Edit
+                                <!-- Exam Information -->
 
-                    </button>
+                                <div class="col-lg-8">
 
-                    <button class="btn btn-outline-danger w-100">
+                                    <div class="d-flex align-items-center mb-3 flex-wrap">
 
-                        <i class="bi bi-trash me-2"></i>
+                                        <h4 class="mb-0 fw-bold">
 
-                        Delete
+                                            <?= esc($exam['title']) ?>
 
-                    </button>
+                                        </h4>
 
-                </div>
 
-            </div>
+                                        <?php if ($exam['status'] === 'Published'): ?>
 
-        </div>
+                                            <span class="badge bg-success ms-3">
 
-    </div>
+                                                Published
 
-</div>
+                                            </span>
 
-<!-- =====================================================
-        SECOND EXAMINATION
-====================================================== -->
+                                        <?php else: ?>
 
-<div class="exam-card mb-4">
+                                            <span class="badge bg-warning text-dark ms-3">
 
-    <div class="row align-items-center">
+                                                Draft
 
-        <div class="col-lg-8">
+                                            </span>
 
-            <div class="d-flex align-items-center mb-3">
+                                        <?php endif; ?>
 
-                <h4 class="mb-0 fw-bold">
+                                    </div>
 
-                    Python Programming Assessment
 
-                </h4>
+                                    <p class="text-muted mb-4">
 
-                <span class="badge bg-warning text-dark ms-3">
+                                        <?= esc($exam['subject']) ?>
 
-                    Draft
+                                        <?php if (!empty($exam['description'])): ?>
 
-                </span>
+                                            <span class="mx-1">•</span>
 
-            </div>
+                                            <?= esc(
+                                                word_limiter(
+                                                    $exam['description'],
+                                                    15
+                                                )
+                                            ) ?>
 
-            <p class="text-muted mb-4">
+                                        <?php endif; ?>
 
-                Python Basics • Functions • OOP • File Handling • Exception Handling
+                                    </p>
 
-            </p>
 
-            <div class="row">
+                                    <div class="row">
 
-                <div class="col-md-2">
 
-                    <small class="text-muted d-block">
-                        Questions
-                    </small>
+                                        <!-- Questions -->
 
-                    <strong>25</strong>
+                                        <div class="col-md-3 col-6 mb-3">
 
-                </div>
+                                            <small class="text-muted d-block">
 
-                <div class="col-md-2">
+                                                Questions
 
-                    <small class="text-muted d-block">
-                        Students
-                    </small>
+                                            </small>
 
-                    <strong>0</strong>
+                                            <strong>
 
-                </div>
+                                                <?php
+                                                $examQuestionCount = 0;
 
-                <div class="col-md-2">
+                                                foreach ($questionsCount ?? [] as $count) {
 
-                    <small class="text-muted d-block">
-                        Duration
-                    </small>
+                                                    if ($count['exam_id'] == $exam['id']) {
+                                                        $examQuestionCount = $count['total'];
+                                                        break;
+                                                    }
 
-                    <strong>45 Min</strong>
+                                                }
+                                                ?>
 
-                </div>
+                                                <?= esc($examQuestionCount) ?>
 
-                <div class="col-md-2">
+                                            </strong>
 
-                    <small class="text-muted d-block">
-                        Marks
-                    </small>
+                                        </div>
 
-                    <strong>50</strong>
 
-                </div>
+                                        <!-- Duration -->
 
-                <div class="col-md-2">
+                                        <div class="col-md-3 col-6 mb-3">
 
-                    <small class="text-muted d-block">
-                        Exam Date
-                    </small>
+                                            <small class="text-muted d-block">
 
-                    <strong>--</strong>
+                                                Duration
 
-                </div>
+                                            </small>
 
-                <div class="col-md-2">
+                                            <strong>
 
-                    <small class="text-muted d-block">
-                        Created
-                    </small>
+                                                <?= esc($exam['duration']) ?>
+                                                Min
 
-                    <strong>Yesterday</strong>
+                                            </strong>
 
-                </div>
+                                        </div>
 
-            </div>
 
-        </div>
+                                        <!-- Marks -->
 
-        <div class="col-lg-4">
+                                        <div class="col-md-3 col-6 mb-3">
 
-            <div class="d-grid gap-2">
+                                            <small class="text-muted d-block">
 
-                <button class="btn btn-primary">
+                                                Marks
 
-                    Manage Questions
+                                            </small>
 
-                </button>
+                                            <strong>
 
-                <button class="btn btn-outline-primary">
+                                                <?= esc($exam['total_marks']) ?>
 
-                    Student List
+                                            </strong>
 
-                </button>
+                                        </div>
 
-                <button class="btn btn-outline-warning">
 
-                    Send Invitations
+                                        <!-- Exam Date -->
 
-                </button>
+                                        <div class="col-md-3 col-6 mb-3">
 
-                <button class="btn btn-outline-success">
+                                            <small class="text-muted d-block">
 
-                    View Results
+                                                Exam Date
 
-                </button>
+                                            </small>
 
-                <div class="d-flex gap-2">
+                                            <strong>
 
-                    <button class="btn btn-outline-secondary w-100">
+                                                <?= !empty($exam['exam_date'])
+                                                    ? date(
+                                                        'd M Y',
+                                                        strtotime($exam['exam_date'])
+                                                    )
+                                                    : '--'
+                                                ?>
 
-                        Edit
+                                            </strong>
 
-                    </button>
+                                        </div>
 
-                    <button class="btn btn-outline-danger w-100">
+                                    </div>
 
-                        Delete
+                                </div>
 
-                    </button>
 
-                </div>
+                                <!-- Actions -->
+
+                                <div class="col-lg-4">
+
+                                    <div class="exam-actions">
+
+                                        <a href="<?= base_url('exams/review/' . $exam['id']) ?>"
+                                        class="action-btn review-btn">
+
+                                            <i class="bi bi-eye"></i>
+                                            Review
+
+                                        </a>
+
+
+                                        <a href="<?= base_url('exams/edit/' . $exam['id']) ?>"
+                                        class="action-btn edit-btn">
+
+                                            <i class="bi bi-pencil-square"></i>
+                                            Edit
+
+                                        </a>
+
+
+                                        <a href="<?= base_url('exams/share/' . $exam['id']) ?>"
+                                        class="action-btn share-btn">
+
+                                            <i class="bi bi-send"></i>
+                                            Share
+
+                                        </a>
+
+
+                                        <?php if ($exam['status'] === 'Completed'): ?>
+
+                                            <a href="<?= base_url('exams/results/' . $exam['id']) ?>"
+                                            class="action-btn result-btn">
+
+                                                <i class="bi bi-bar-chart"></i>
+                                                Results
+
+                                            </a>
+
+                                        <?php else: ?>
+
+                                            <button class="action-btn result-btn disabled"
+                                                    disabled>
+
+                                                <i class="bi bi-lock"></i>
+                                                Results
+
+                                            </button>
+
+                                        <?php endif; ?>
+
+
+                                        <form action="<?= base_url('exams/delete/' . $exam['id']) ?>"
+                                            method="post"
+                                            class="delete-form">
+
+                                            <?= csrf_field() ?>
+
+                                            <button type="submit"
+                                                    class="action-btn delete-btn"
+                                                    onclick="return confirm('Are you sure you want to delete this examination?')">
+
+                                                <i class="bi bi-trash"></i>
+                                                Delete
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    <?php endforeach; ?>
+
+
+                <?php endif; ?>
 
             </div>
 
@@ -1167,27 +761,72 @@ body{
     </div>
 
 </div>
-
 
 
 <!-- =====================================================
-        FLOATING CREATE BUTTON
+     FLOATING CREATE BUTTON
 ====================================================== -->
 
-<a href="<?= base_url('exams/create') ?>"
-   class="floating-btn">
+<a
+    href="<?= base_url('exams/create') ?>"
+    class="floating-btn">
 
     <i class="bi bi-plus-lg"></i>
 
 </a>
 
 
-</div>
+<!-- Bootstrap JS -->
 
-</div>
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Search -->
+
+<script>
+
+const searchInput = document.getElementById('examSearch');
+
+if (searchInput) {
+
+    searchInput.addEventListener('input', function () {
+
+        const searchValue =
+            this.value.toLowerCase().trim();
+
+        const examCards =
+            document.querySelectorAll('.exam-card');
+
+        examCards.forEach(function (card) {
+
+            const title =
+                card.dataset.examTitle || '';
+
+            const subject =
+                card.dataset.examSubject || '';
+
+            if (
+                title.includes(searchValue) ||
+                subject.includes(searchValue)
+            ) {
+
+                card.style.display = '';
+
+            } else {
+
+                card.style.display = 'none';
+
+            }
+
+        });
+
+    });
+
+}
+
+</script>
 
 </body>
 

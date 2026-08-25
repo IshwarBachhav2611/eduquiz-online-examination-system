@@ -27,7 +27,6 @@ class CreateStudentsTable extends Migration
             'email' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 150,
-                'unique'     => true,
             ],
             'phone' => [
                 'type'       => 'VARCHAR',
@@ -56,6 +55,11 @@ class CreateStudentsTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addKey('examiner_id');
+
+        $this->forge->addUniqueKey(
+            ['examiner_id', 'email'],
+            'unique_examiner_student_email'
+        );
 
         $this->forge->addForeignKey(
             'examiner_id',
