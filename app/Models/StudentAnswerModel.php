@@ -4,32 +4,24 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class AttemptModel extends Model
+class StudentAnswerModel extends Model
 {
-    protected $table = 'attempts';
-
-    protected $primaryKey = 'id';
-
+    protected $table            = 'student_answers';
+    protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-
-    protected $returnType = 'array';
-
-    protected $protectFields = true;
+    protected $returnType       = 'array';
 
     protected $allowedFields = [
-        'exam_id',
-        'student_id',
-        'started_at',
-        'submitted_at',
-        'score',
-        'percentage',
-        'status'
+        'attempt_id',
+        'question_id',
+        'selected_option',
+        'is_correct',
+        'marks_obtained'
     ];
 
     protected $useTimestamps = true;
 
     protected $createdField = 'created_at';
-
     protected $updatedField = 'updated_at';
 
     protected $validationRules = [];

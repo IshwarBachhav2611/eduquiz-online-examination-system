@@ -44,7 +44,7 @@ $routes->get('exams/share/(:num)', 'ExamController::share/$1');
 
 $routes->post('exams/share/(:num)','ExamController::shareStudents/$1');
 
-$routes->post('exams/share/(:num)', 'ExamController::sendInvitations/$1');
+//$routes->post('exams/share/(:num)', 'ExamController::sendInvitations/$1');
 
 
 
@@ -67,3 +67,8 @@ $routes->get('students/edit/(:num)', 'StudentController::edit/$1');
 $routes->post('students/update/(:num)', 'StudentController::update/$1');
 $routes->post('students/delete/(:num)', 'StudentController::delete/$1');
 $routes->get('/students/view/(:num)', 'StudentController::view/$1');
+
+// Student Examination
+$routes->get('student/exam/(:num)','StudentExamController::start/$1');
+$routes->get('/student/exam/start/(:num)','StudentExamController::start/$1');
+$routes->post('/student/exam/submit/(:num)','StudentExamController::submit/$1');
