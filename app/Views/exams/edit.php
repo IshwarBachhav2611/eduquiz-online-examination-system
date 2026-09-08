@@ -270,8 +270,30 @@
                     </div>
 
 
-                </div>
+                    <!-- Status -->
 
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select name="status"
+                                class="form-select">
+
+                            <option value="Draft"
+                                <?= ($exam['status'] ?? '') === 'Draft' ? 'selected' : '' ?>>
+                                Draft
+                            </option>
+
+                            <option value="Published"
+                                <?= ($exam['status'] ?? '') === 'Published' ? 'selected' : '' ?>>
+                                Published
+                            </option>
+
+                        </select>
+
+                    </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-5">
 

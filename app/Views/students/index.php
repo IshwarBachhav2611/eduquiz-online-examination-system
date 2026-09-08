@@ -350,6 +350,64 @@
 
     <div class="container">
 
+        <!-- STUDENT CREDENTIALS -->
+        <?php if (session()->getFlashdata('student_credentials')): ?>
+
+            <?php $credentials = session()->getFlashdata('student_credentials'); ?>
+
+            <div class="alert alert-success border-0 shadow-sm mb-4">
+
+                <div class="d-flex gap-3">
+
+                    <div class="fs-4">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+
+                    <div class="flex-grow-1">
+
+                        <h6 class="fw-bold mb-1">
+                            Student Added Successfully
+                        </h6>
+
+                        <p class="mb-3">
+                            Login credentials have been generated for this student.
+                        </p>
+
+                        <div class="bg-white border rounded p-3">
+
+                            <div class="mb-2">
+                                <small class="text-muted d-block">
+                                    Student Login Email
+                                </small>
+
+                                <strong>
+                                    <?= esc($credentials['email']) ?>
+                                </strong>
+                            </div>
+
+                            <div>
+                                <small class="text-muted d-block">
+                                    Temporary Password
+                                </small>
+
+                                <strong>
+                                    <?= esc($credentials['password']) ?>
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <small class="text-muted d-block mt-2">
+                            Save these credentials. Email delivery will be added later.
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        <?php endif; ?>
 
         <!-- HEADER -->
         <div class="page-header">

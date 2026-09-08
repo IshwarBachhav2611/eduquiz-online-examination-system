@@ -28,6 +28,7 @@ class CreateStudentAnswersTable extends Migration
             'selected_option' => [
                 'type'       => 'ENUM',
                 'constraint' => ['A', 'B', 'C', 'D'],
+                'null'       => true,
             ],
             'is_correct' => [
                 'type'       => 'BOOLEAN',

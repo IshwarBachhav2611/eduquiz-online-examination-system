@@ -18,24 +18,18 @@ class StudentModel extends Model
 
     protected $protectFields = true;
 
-
     protected $allowedFields = [
-
-        'examiner_id',
-
         'name',
-
         'email',
-
-        'department'
-
+        'department',
+        'phone',
+        'password',
+        'status'
     ];
-
 
     protected bool $allowEmptyInserts = false;
 
     protected bool $updateOnlyChanged = true;
-
 
     // =====================================================
     // DATES
@@ -49,7 +43,6 @@ class StudentModel extends Model
 
     protected $updatedField = 'updated_at';
 
-
     // =====================================================
     // VALIDATION
     // =====================================================
@@ -61,7 +54,6 @@ class StudentModel extends Model
     protected $skipValidation = false;
 
     protected $cleanValidationRules = true;
-
 
     // =====================================================
     // CALLBACKS

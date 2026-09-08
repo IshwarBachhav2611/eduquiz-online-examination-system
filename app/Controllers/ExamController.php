@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use App\Models\ExamModel;
 use App\Models\QuestionModel;
-
 use App\Models\StudentModel;
 use App\Models\ExamStudentModel;
+use App\Models\ExaminerStudentModel;
 
 class ExamController extends BaseController
 {
@@ -60,7 +60,8 @@ class ExamController extends BaseController
 
         if (!$this->validate($rules)) {
 
-            return redirect()->back()
+            return redirect()
+                ->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
         }
@@ -112,7 +113,8 @@ class ExamController extends BaseController
 
         if ($action === 'draft') {
 
-            return redirect()->to('/dashboard')
+            return redirect()
+                ->to('/dashboard')
                 ->with(
                     'success',
                     'Examination saved as draft successfully.'
@@ -141,6 +143,7 @@ class ExamController extends BaseController
             ->where('examiner_id', session('user_id'))
             ->orderBy('id', 'DESC')
             ->findAll();
+
 
         return view('exams/index', [
             'exams' => $exams
@@ -189,28 +192,96 @@ class ExamController extends BaseController
 
     /*
     |--------------------------------------------------------------------------
+    | Publish Examination
+    |--------------------------------------------------------------------------
+    */
+
+    public function finish($id)
+    {
+        $exam = $this->examModel
+            ->where('id', $id)
+            ->where('examiner_id', session('user_id'))
+            ->first();
+
+
+        if (!$exam) {
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
+        }
+
+
+        if ($exam['status'] === 'Published') {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'This examination is already published.'
+                );
+        }
+
+
+        $questionModel = new QuestionModel();
+
+
+        $questionCount = $questionModel
+            ->where('exam_id', $id)
+            ->countAllResults();
+
+
+        if ($questionCount === 0) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Add at least one question before publishing the examination.'
+                );
+        }
+
+
+        $this->examModel->update($id, [
+
+            'status' => 'Published'
+
+        ]);
+
+
+        return redirect()
+            ->to('/exams/review/' . $id)
+            ->with(
+                'success',
+                'Examination published successfully.'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Edit Examination
     |--------------------------------------------------------------------------
     */
 
     public function edit($id)
     {
-        $examModel = new ExamModel();
+        $exam = $this->examModel
+            ->where('id', $id)
+            ->where('examiner_id', session('user_id'))
+            ->first();
 
-        $exam = $examModel->find($id);
 
         if (!$exam) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
-        // Security: examiner should only edit their own exam
-        if ($exam['examiner_id'] != session('user_id')) {
-            return redirect()->to('/dashboard')
-                ->with('error', 'You are not authorized to edit this examination.');
-        }
 
         return view('exams/edit', [
+
             'exam' => $exam
+
         ]);
     }
 
@@ -252,7 +323,9 @@ class ExamController extends BaseController
 
             'start_time' => 'required',
 
-            'end_time' => 'required'
+            'end_time' => 'required',
+
+            'status' => 'required|in_list[Draft,Published]'
         ];
 
 
@@ -265,6 +338,35 @@ class ExamController extends BaseController
                     'errors',
                     $this->validator->getErrors()
                 );
+        }
+
+
+        $status = $this->request->getPost('status');
+
+
+        if (
+            $status === 'Published' &&
+            $exam['status'] !== 'Published'
+        ) {
+
+            $questionModel = new QuestionModel();
+
+
+            $questionCount = $questionModel
+                ->where('exam_id', $id)
+                ->countAllResults();
+
+
+            if ($questionCount === 0) {
+
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'Add at least one question before publishing the examination.'
+                    );
+            }
         }
 
 
@@ -286,29 +388,23 @@ class ExamController extends BaseController
                 $this->request->getPost('instructions')
             ),
 
-            'duration' => $this->request
-                ->getPost('duration'),
+            'duration' => $this->request->getPost('duration'),
 
-            'total_marks' => $this->request
-                ->getPost('total_marks'),
+            'total_marks' => $this->request->getPost('total_marks'),
 
-            'passing_marks' => $this->request
-                ->getPost('passing_marks'),
+            'passing_marks' => $this->request->getPost('passing_marks'),
 
-            'max_attempts' => $this->request
-                ->getPost('max_attempts'),
+            'max_attempts' => $this->request->getPost('max_attempts'),
 
-            'negative_marking' => $this->request
-                ->getPost('negative_marking'),
+            'negative_marking' => $this->request->getPost('negative_marking'),
 
-            'exam_date' => $this->request
-                ->getPost('exam_date'),
+            'exam_date' => $this->request->getPost('exam_date'),
 
-            'start_time' => $this->request
-                ->getPost('start_time'),
+            'start_time' => $this->request->getPost('start_time'),
 
-            'end_time' => $this->request
-                ->getPost('end_time')
+            'end_time' => $this->request->getPost('end_time'),
+
+            'status' => $status
         ];
 
 
@@ -348,6 +444,7 @@ class ExamController extends BaseController
         return view('exams/results', [
 
             'exam' => $exam
+
         ]);
     }
 
@@ -373,19 +470,6 @@ class ExamController extends BaseController
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Future Flow
-        |--------------------------------------------------------------------------
-        |
-        | 1. Find invited students.
-        | 2. Send cancellation email.
-        | 3. Delete exam-related records.
-        | 4. Delete examination.
-        |
-        */
-
-
         $this->examModel->delete($id);
 
 
@@ -397,6 +481,7 @@ class ExamController extends BaseController
             );
     }
 
+
     /*
     |--------------------------------------------------------------------------
     | Share Examination Page
@@ -405,93 +490,150 @@ class ExamController extends BaseController
 
     public function share($id)
     {
-        $examModel = new ExamModel();
+        /*
+        |----------------------------------------------------------------------
+        | Find Examination
+        |----------------------------------------------------------------------
+        */
 
-        $exam = $examModel->find($id);
+        $exam = $this->examModel
+            ->where('id', $id)
+            ->where('examiner_id', session('user_id'))
+            ->first();
+
 
         if (!$exam) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
-        // Security check
-        if ($exam['examiner_id'] != session('user_id')) {
-            return redirect()->to('/dashboard')
-                ->with('error', 'You are not authorized to share this examination.');
-        }
+
+        /*
+        |----------------------------------------------------------------------
+        | Get Students Belonging To Current Examiner
+        |----------------------------------------------------------------------
+        |
+        | students table no longer contains examiner_id.
+        |
+        | Therefore we use examiner_students table:
+        |
+        | examiner_id -> student_id
+        |
+        */
+
+        $examinerStudentModel = new ExaminerStudentModel();
 
         $studentModel = new StudentModel();
 
-        $students = $studentModel
+
+        $studentRelations = $examinerStudentModel
             ->where('examiner_id', session('user_id'))
             ->findAll();
 
+
+        $students = [];
+
+
+        foreach ($studentRelations as $relation) {
+
+            $student = $studentModel
+                ->where('id', $relation['student_id'])
+                ->first();
+
+
+            if ($student) {
+
+                $students[] = $student;
+            }
+        }
+
+
+        /*
+        |----------------------------------------------------------------------
+        | Get Students Already Assigned To This Examination
+        |----------------------------------------------------------------------
+        */
+
         $examStudentModel = new ExamStudentModel();
+
 
         $selectedStudents = $examStudentModel
             ->where('exam_id', $id)
             ->findColumn('student_id');
 
+
         if (!$selectedStudents) {
+
             $selectedStudents = [];
         }
 
+
+        /*
+        |----------------------------------------------------------------------
+        | Load View
+        |----------------------------------------------------------------------
+        */
+
         return view('exams/share', [
+
             'exam' => $exam,
+
             'students' => $students,
+
             'selectedStudents' => $selectedStudents
+
         ]);
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Share Examination With Students
+    |--------------------------------------------------------------------------
+    */
 
     public function shareStudents($id)
     {
         $examModel = new ExamModel();
+
         $examStudentModel = new ExamStudentModel();
+
+        $examinerStudentModel = new ExaminerStudentModel();
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Find Exam
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
+        | Find Examination
+        |----------------------------------------------------------------------
         */
 
-        $exam = $examModel->find($id);
+        $exam = $examModel
+            ->where('id', $id)
+            ->where('examiner_id', session('user_id'))
+            ->first();
 
 
         if (!$exam) {
 
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Check Exam Ownership
-        |--------------------------------------------------------------------------
-        */
-
-        if ($exam['examiner_id'] != session('user_id')) {
-
-            return redirect()
-                ->to('/dashboard')
-                ->with(
-                    'error',
-                    'You are not authorized to share this examination.'
-                );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
         | Get Selected Students
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
         */
 
         $students = $this->request->getPost('students');
 
 
-        if (empty($students) || !is_array($students)) {
+        if (
+            empty($students) ||
+            !is_array($students)
+        ) {
 
             return redirect()
                 ->back()
@@ -499,26 +641,54 @@ class ExamController extends BaseController
                     'error',
                     'Please select at least one student.'
                 );
-
         }
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Save Selected Students
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
+        | Verify Students Belong To Examiner
+        |----------------------------------------------------------------------
+        */
+
+        $validStudents = [];
+
+
+        foreach ($students as $studentId) {
+
+            $relation = $examinerStudentModel
+                ->where('examiner_id', session('user_id'))
+                ->where('student_id', $studentId)
+                ->first();
+
+
+            if ($relation) {
+
+                $validStudents[] = $studentId;
+            }
+        }
+
+
+        if (empty($validStudents)) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'No valid students were selected.'
+                );
+        }
+
+
+        /*
+        |----------------------------------------------------------------------
+        | Save Students For Examination
+        |----------------------------------------------------------------------
         */
 
         $sharedCount = 0;
 
 
-        foreach ($students as $studentId) {
-
-            /*
-            |--------------------------------------------------------------------------
-            | Prevent Duplicate Assignment
-            |--------------------------------------------------------------------------
-            */
+        foreach ($validStudents as $studentId) {
 
             $alreadyExists = $examStudentModel
                 ->where('exam_id', $id)
@@ -534,22 +704,20 @@ class ExamController extends BaseController
 
                     'student_id' => $studentId,
 
-                    'assigned_at' => date('Y-m-d H:i:s')
+                    'created_at' => date('Y-m-d H:i:s')
 
                 ]);
 
 
                 $sharedCount++;
-
             }
-
         }
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Redirect With Result
-        |--------------------------------------------------------------------------
+        |----------------------------------------------------------------------
+        | Result
+        |----------------------------------------------------------------------
         */
 
         if ($sharedCount === 0) {
@@ -560,7 +728,6 @@ class ExamController extends BaseController
                     'error',
                     'The selected students have already received this examination.'
                 );
-
         }
 
 
@@ -573,9 +740,11 @@ class ExamController extends BaseController
                 ' student(s).'
             );
     }
+
+
     /*
     |--------------------------------------------------------------------------
-    | Save Selected Students
+    | Send Invitations
     |--------------------------------------------------------------------------
     */
 
@@ -583,46 +752,131 @@ class ExamController extends BaseController
     {
         $examModel = new ExamModel();
 
-        $exam = $examModel->find($id);
+        $examStudentModel = new ExamStudentModel();
+
+        $examinerStudentModel = new ExaminerStudentModel();
+
+
+        /*
+        |----------------------------------------------------------------------
+        | Find Examination
+        |----------------------------------------------------------------------
+        */
+
+        $exam = $examModel
+            ->where('id', $id)
+            ->where('examiner_id', session('user_id'))
+            ->first();
+
 
         if (!$exam) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
-        // Security check
-        if ($exam['examiner_id'] != session('user_id')) {
-            return redirect()->to('/dashboard')
-                ->with('error', 'You are not authorized to share this examination.');
-        }
+
+        /*
+        |----------------------------------------------------------------------
+        | Get Selected Students
+        |----------------------------------------------------------------------
+        */
 
         $studentIds = $this->request->getPost('students');
 
-        if (empty($studentIds)) {
-            return redirect()->back()
-                ->with('error', 'Please select at least one student.');
+
+        if (
+            empty($studentIds) ||
+            !is_array($studentIds)
+        ) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Please select at least one student.'
+                );
         }
 
-        $examStudentModel = new ExamStudentModel();
 
-        // Remove previous student assignments
+        /*
+        |----------------------------------------------------------------------
+        | Remove Existing Assignments
+        |----------------------------------------------------------------------
+        */
+
         $examStudentModel
             ->where('exam_id', $id)
             ->delete();
 
-        // Add selected students
+
+        /*
+        |----------------------------------------------------------------------
+        | Add Valid Students
+        |----------------------------------------------------------------------
+        */
+
+        $count = 0;
+
+
         foreach ($studentIds as $studentId) {
 
+            /*
+            |------------------------------------------------------------------
+            | Verify Student Belongs To Examiner
+            |------------------------------------------------------------------
+            */
+
+            $relation = $examinerStudentModel
+                ->where('examiner_id', session('user_id'))
+                ->where('student_id', $studentId)
+                ->first();
+
+
+            if (!$relation) {
+
+                continue;
+            }
+
+
             $examStudentModel->insert([
+
                 'exam_id' => $id,
-                'student_id' => $studentId
+
+                'student_id' => $studentId,
+
+                'created_at' => date('Y-m-d H:i:s')
+
             ]);
+
+
+            $count++;
         }
 
-        return redirect()->to('/dashboard')
+
+        /*
+        |----------------------------------------------------------------------
+        | Result
+        |----------------------------------------------------------------------
+        */
+
+        if ($count === 0) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'No valid students were selected.'
+                );
+        }
+
+
+        return redirect()
+            ->to('/dashboard')
             ->with(
                 'success',
-                count($studentIds) . ' student(s) selected for the examination.'
+                $count .
+                ' student(s) selected for the examination.'
             );
     }
-
 }

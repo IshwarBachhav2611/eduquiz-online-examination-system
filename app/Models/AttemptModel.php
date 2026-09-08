@@ -6,15 +6,12 @@ use CodeIgniter\Model;
 
 class AttemptModel extends Model
 {
-    protected $table = 'attempts';
-
-    protected $primaryKey = 'id';
-
+    protected $table            = 'attempts';
+    protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-
-    protected $returnType = 'array';
-
-    protected $protectFields = true;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
+    protected $protectFields    = true;
 
     protected $allowedFields = [
         'exam_id',
@@ -23,18 +20,23 @@ class AttemptModel extends Model
         'submitted_at',
         'score',
         'percentage',
-        'status'
+        'status',
+        'created_at',
+        'updated_at'
     ];
 
-    protected $useTimestamps = true;
+    protected bool $allowEmptyInserts = false;
+    protected bool $updateOnlyChanged = true;
 
-    protected $createdField = 'created_at';
+    protected $useTimestamps = false;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
-    protected $updatedField = 'updated_at';
-
-    protected $validationRules = [];
-
+    protected $validationRules    = [];
     protected $validationMessages = [];
+    protected $skipValidation     = false;
 
-    protected $skipValidation = false;
+    protected $allowCallbacks = true;
 }

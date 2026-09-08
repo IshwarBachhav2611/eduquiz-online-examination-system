@@ -3,22 +3,41 @@
 namespace App\Controllers;
 
 use App\Models\StudentModel;
+use App\Models\ExaminerStudentModel;
 
 class StudentController extends BaseController
 {
+    protected $studentModel;
+    protected $examinerStudentModel;
+
+    public function __construct()
+    {
+        $this->studentModel = new StudentModel();
+        $this->examinerStudentModel = new ExaminerStudentModel();
+    }
+
+
     /*
     |--------------------------------------------------------------------------
-    | SHOW STUDENT LIST
+    | STUDENT LIST
     |--------------------------------------------------------------------------
     */
 
     public function index()
     {
-        $studentModel = new StudentModel();
+        $examinerId = session('user_id');
 
-        $students = $studentModel
-            ->where('examiner_id', session('user_id'))
-            ->orderBy('name', 'ASC')
+        $students = $this->studentModel
+            ->select('students.*')
+            ->join(
+                'examiner_students',
+                'examiner_students.student_id = students.id'
+            )
+            ->where(
+                'examiner_students.examiner_id',
+                $examinerId
+            )
+            ->orderBy('students.name', 'ASC')
             ->findAll();
 
         return view('students/index', [
@@ -29,7 +48,7 @@ class StudentController extends BaseController
 
     /*
     |--------------------------------------------------------------------------
-    | SHOW ADD STUDENT PAGE
+    | CREATE STUDENT PAGE
     |--------------------------------------------------------------------------
     */
 
@@ -41,15 +60,18 @@ class StudentController extends BaseController
 
     /*
     |--------------------------------------------------------------------------
-    | STORE STUDENT
+    | CREATE NEW STUDENT
     |--------------------------------------------------------------------------
+    |
+    | This creates a completely new global student account.
+    |
     */
 
     public function store()
     {
         $rules = [
-            'name'       => 'required|min_length[3]|max_length[100]',
-            'email'      => 'required|valid_email|max_length[150]',
+            'name' => 'required|min_length[3]|max_length[100]',
+            'email' => 'required|valid_email|max_length[150]',
             'department' => 'required|max_length[100]'
         ];
 
@@ -64,95 +86,336 @@ class StudentController extends BaseController
                 );
         }
 
-        $studentModel = new StudentModel();
+        $examinerId = session('user_id');
+
+        $name = trim(
+            $this->request->getPost('name')
+        );
+
+        $email = strtolower(
+            trim($this->request->getPost('email'))
+        );
+
+        $department = trim(
+            $this->request->getPost('department')
+        );
+
 
         /*
         |--------------------------------------------------------------------------
-        | CHECK DUPLICATE EMAIL FOR SAME EXAMINER
+        | CHECK EMAIL
         |--------------------------------------------------------------------------
         */
 
-        $email = trim(
-            $this->request->getPost('email')
-        );
-
-        $existingStudent = $studentModel
-            ->where('examiner_id', session('user_id'))
+        $existingStudent = $this->studentModel
             ->where('email', $email)
             ->first();
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | EXISTING STUDENT
+        |--------------------------------------------------------------------------
+        */
+
         if ($existingStudent) {
 
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with(
+            $alreadyLinked = $this->examinerStudentModel
+                ->where('examiner_id', $examinerId)
+                ->where('student_id', $existingStudent['id'])
+                ->first();
+
+            if ($alreadyLinked) {
+
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'This student is already in your student list.'
+                    );
+            }
+
+
+            $result = $this->examinerStudentModel->insert([
+                'examiner_id' => $examinerId,
+                'student_id' => $existingStudent['id']
+            ]);
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | CHECK INSERT ERROR
+            |--------------------------------------------------------------------------
+            */
+
+            if ($result === false) {
+
+                log_message(
                     'error',
-                    'A student with this email already exists.'
+                    'ExaminerStudent INSERT failed: ' .
+                    json_encode($this->examinerStudentModel->errors())
+                );
+
+                return redirect()
+                    ->back()
+                    ->with(
+                        'error',
+                        'Unable to add existing student. Please check the database.'
+                    );
+            }
+
+
+            return redirect()
+                ->to('/students')
+                ->with(
+                    'success',
+                    'Existing student added to your student list.'
                 );
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | SAVE STUDENT
+        | GENERATE PASSWORD
         |--------------------------------------------------------------------------
         */
 
-        $studentModel->insert([
+        $plainPassword = bin2hex(
+            random_bytes(4)
+        );
 
-            'examiner_id' => session('user_id'),
 
-            'name' => trim(
-                $this->request->getPost('name')
-            ),
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE STUDENT ACCOUNT
+        |--------------------------------------------------------------------------
+        */
 
+        $studentId = $this->studentModel->insert([
+            'name' => $name,
             'email' => $email,
-
-            'department' => trim(
-                $this->request->getPost('department')
-            )
+            'department' => $department,
+            'password' => password_hash(
+                $plainPassword,
+                PASSWORD_DEFAULT
+            ),
+            'status' => 'Active'
         ]);
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | CHECK STUDENT INSERT
+        |--------------------------------------------------------------------------
+        */
+
+        if ($studentId === false) {
+
+            log_message(
+                'error',
+                'Student INSERT failed: ' .
+                json_encode($this->studentModel->errors())
+            );
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Unable to create student account.'
+                );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CONNECT STUDENT WITH EXAMINER
+        |--------------------------------------------------------------------------
+        */
+
+        $linkId = $this->examinerStudentModel->insert([
+            'examiner_id' => $examinerId,
+            'student_id' => $studentId
+        ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CHECK RELATIONSHIP INSERT
+        |--------------------------------------------------------------------------
+        */
+
+        if ($linkId === false) {
+
+            log_message(
+                'error',
+                'ExaminerStudent INSERT failed: ' .
+                json_encode($this->examinerStudentModel->errors())
+            );
+
+            /*
+            |--------------------------------------------------------------
+            | Remove student because relationship failed
+            |--------------------------------------------------------------
+            */
+
+            $this->studentModel->delete($studentId);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Unable to add student. Please try again.'
+                );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SUCCESS
+        |--------------------------------------------------------------------------
+        */
+
         return redirect()
-            ->to('/students/create')
+            ->to('/students')
             ->with(
                 'success',
                 'Student added successfully.'
+            )
+            ->with(
+                'student_credentials',
+                [
+                    'email' => $email,
+                    'password' => $plainPassword
+                ]
+            );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADD EXISTING STUDENT
+    |--------------------------------------------------------------------------
+    */
+
+    public function addExisting($studentId)
+    {
+        $examinerId = session('user_id');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FIND STUDENT
+        |--------------------------------------------------------------------------
+        */
+
+        $student = $this->studentModel
+            ->where('id', $studentId)
+            ->first();
+
+
+        if (!$student) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Student not found.'
+                );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CHECK EXISTING RELATIONSHIP
+        |--------------------------------------------------------------------------
+        */
+
+        $alreadyLinked = $this->examinerStudentModel
+            ->where(
+                'examiner_id',
+                $examinerId
+            )
+            ->where(
+                'student_id',
+                $studentId
+            )
+            ->first();
+
+
+        if ($alreadyLinked) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'This student is already in your student list.'
+                );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE RELATIONSHIP
+        |--------------------------------------------------------------------------
+        */
+
+        $result = $this->examinerStudentModel->insert([
+            'examiner_id' => $examinerId,
+            'student_id' => $studentId
+        ]);
+
+
+        if (!$result) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Unable to add student. Please try again.'
+                );
+        }
+
+
+        return redirect()
+            ->to('/students')
+            ->with(
+                'success',
+                'Student added to your student list successfully.'
             );
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | SHOW EDIT STUDENT PAGE
+    | EDIT STUDENT
     |--------------------------------------------------------------------------
     */
 
     public function edit($id)
     {
-        $studentModel = new StudentModel();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Only allow the logged-in examiner to access their own student
-        |--------------------------------------------------------------------------
-        */
-
-        $student = $studentModel
-            ->where('id', $id)
-            ->where('examiner_id', session('user_id'))
+        $student = $this->studentModel
+            ->select('students.*')
+            ->join(
+                'examiner_students',
+                'examiner_students.student_id = students.id'
+            )
+            ->where(
+                'students.id',
+                $id
+            )
+            ->where(
+                'examiner_students.examiner_id',
+                session('user_id')
+            )
             ->first();
+
 
         if (!$student) {
 
-            return redirect()
-                ->to('/students')
-                ->with(
-                    'error',
-                    'Student not found.'
-                );
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
 
@@ -170,11 +433,45 @@ class StudentController extends BaseController
 
     public function update($id)
     {
+        $examinerId = session('user_id');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VERIFY STUDENT BELONGS TO THIS EXAMINER
+        |--------------------------------------------------------------------------
+        */
+
+        $student = $this->studentModel
+            ->select('students.*')
+            ->join(
+                'examiner_students',
+                'examiner_students.student_id = students.id'
+            )
+            ->where(
+                'students.id',
+                $id
+            )
+            ->where(
+                'examiner_students.examiner_id',
+                $examinerId
+            )
+            ->first();
+
+
+        if (!$student) {
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
+        }
+
+
         $rules = [
-            'name'       => 'required|min_length[3]|max_length[100]',
-            'email'      => 'required|valid_email|max_length[150]',
+            'name' => 'required|min_length[3]|max_length[100]',
+            'email' => 'required|valid_email|max_length[150]',
             'department' => 'required|max_length[100]'
         ];
+
 
         if (!$this->validate($rules)) {
 
@@ -188,60 +485,37 @@ class StudentController extends BaseController
         }
 
 
-        $studentModel = new StudentModel();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Find student belonging to logged-in examiner
-        |--------------------------------------------------------------------------
-        */
-
-        $student = $studentModel
-            ->where('id', $id)
-            ->where('examiner_id', session('user_id'))
-            ->first();
-
-        if (!$student) {
-
-            return redirect()
-                ->to('/students')
-                ->with(
-                    'error',
-                    'Student not found.'
-                );
-        }
-
-
-        $email = trim(
-            $this->request->getPost('email')
+        $email = strtolower(
+            trim($this->request->getPost('email'))
         );
 
 
         /*
         |--------------------------------------------------------------------------
-        | CHECK EMAIL DUPLICATE
+        | CHECK GLOBAL EMAIL DUPLICATE
         |--------------------------------------------------------------------------
-        |
-        | Same examiner cannot have two students with the same email.
-        | Different examiners can use the same email.
-        |
         */
 
-        $existingStudent = $studentModel
-            ->where('examiner_id', session('user_id'))
-            ->where('email', $email)
-            ->where('id !=', $id)
+        $duplicate = $this->studentModel
+            ->where(
+                'email',
+                $email
+            )
+            ->where(
+                'id !=',
+                $id
+            )
             ->first();
 
-        if ($existingStudent) {
+
+        if ($duplicate) {
 
             return redirect()
                 ->back()
                 ->withInput()
                 ->with(
                     'error',
-                    'Another student with this email already exists.'
+                    'Another student already exists with this email address.'
                 );
         }
 
@@ -252,18 +526,20 @@ class StudentController extends BaseController
         |--------------------------------------------------------------------------
         */
 
-        $studentModel->update($id, [
+        $this->studentModel->update(
+            $id,
+            [
+                'name' => trim(
+                    $this->request->getPost('name')
+                ),
 
-            'name' => trim(
-                $this->request->getPost('name')
-            ),
+                'email' => $email,
 
-            'email' => $email,
-
-            'department' => trim(
-                $this->request->getPost('department')
-            )
-        ]);
+                'department' => trim(
+                    $this->request->getPost('department')
+                )
+            ]
+        );
 
 
         return redirect()
@@ -274,165 +550,196 @@ class StudentController extends BaseController
             );
     }
 
+
     /*
     |--------------------------------------------------------------------------
-    | DELETE STUDENT
+    | REMOVE STUDENT FROM EXAMINER
     |--------------------------------------------------------------------------
+    |
+    | IMPORTANT:
+    | We do NOT delete the global student account.
+    |
     */
 
     public function delete($id)
     {
-        $studentModel = new StudentModel();
+        $examinerId = session('user_id');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Find student belonging to logged-in examiner
-        |--------------------------------------------------------------------------
-        */
 
-        $student = $studentModel
-            ->where('id', $id)
-            ->where('examiner_id', session('user_id'))
+        $relationship = $this->examinerStudentModel
+            ->where(
+                'examiner_id',
+                $examinerId
+            )
+            ->where(
+                'student_id',
+                $id
+            )
             ->first();
 
-        if (!$student) {
 
-            return redirect()
-                ->to('/students')
-                ->with(
-                    'error',
-                    'Student not found.'
-                );
+        if (!$relationship) {
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Delete student
-        |--------------------------------------------------------------------------
-        */
+        $this->examinerStudentModel
+            ->where(
+                'examiner_id',
+                $examinerId
+            )
+            ->where(
+                'student_id',
+                $id
+            )
+            ->delete();
 
-        $studentModel->delete($id);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Success
-        |--------------------------------------------------------------------------
-        */
 
         return redirect()
             ->to('/students')
             ->with(
                 'success',
-                'Student deleted successfully.'
+                'Student removed from your student list.'
             );
     }
+
 
     /*
     |--------------------------------------------------------------------------
     | VIEW STUDENT
     |--------------------------------------------------------------------------
     */
+
     public function view($id)
     {
-        $studentModel = new StudentModel();
-
-        // Make sure this student belongs to the logged-in examiner
-        $student = $studentModel
-            ->where('id', $id)
-            ->where('examiner_id', session('user_id'))
+        $student = $this->studentModel
+            ->select('students.*')
+            ->join(
+                'examiner_students',
+                'examiner_students.student_id = students.id'
+            )
+            ->where(
+                'students.id',
+                $id
+            )
+            ->where(
+                'examiner_students.examiner_id',
+                session('user_id')
+            )
             ->first();
 
+
         if (!$student) {
-            return redirect()
-                ->to('/students')
-                ->with('error', 'Student not found.');
-        }
 
-
-        $db = \Config\Database::connect();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | EXAMS GIVEN
-        |--------------------------------------------------------------------------
-        */
-
-        $totalExams = $db
-            ->table('attempts')
-            ->where('student_id', $id)
-            ->countAllResults();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | RESULTS
-        |--------------------------------------------------------------------------
-        */
-
-        $results = $db
-            ->table('results')
-            ->select('
-                results.id,
-                results.status AS result_status,
-                results.rank,
-                results.published_at,
-                attempts.exam_id,
-                attempts.score,
-                attempts.percentage,
-                attempts.submitted_at,
-                exams.title AS exam_title
-            ')
-            ->join(
-                'attempts',
-                'attempts.id = results.attempt_id'
-            )
-            ->join(
-                'exams',
-                'exams.id = attempts.exam_id'
-            )
-            ->where('attempts.student_id', $id)
-            ->orderBy('results.published_at', 'DESC')
-            ->get()
-            ->getResultArray();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | PASS / FAIL COUNT
-        |--------------------------------------------------------------------------
-        */
-
-        $passed = 0;
-        $failed = 0;
-
-        foreach ($results as $result) {
-
-            if ($result['result_status'] === 'Pass') {
-
-                $passed++;
-
-            } elseif ($result['result_status'] === 'Fail') {
-
-                $failed++;
-            }
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
 
         return view('students/view', [
-
-            'student'    => $student,
-
-            'totalExams' => $totalExams,
-
-            'passed'     => $passed,
-
-            'failed'     => $failed,
-
-            'results'    => $results
-
+            'student' => $student
         ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DYNAMIC STUDENT SEARCH
+    |--------------------------------------------------------------------------
+    |
+    | Searches globally by:
+    | - Name
+    | - Email
+    |
+    | Returns JSON for AJAX.
+    |
+    */
+
+    public function search()
+    {
+        $query = trim(
+            $this->request->getGet('q') ?? ''
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | EMPTY SEARCH
+        |--------------------------------------------------------------------------
+        */
+
+        if ($query === '') {
+
+            return $this->response
+                ->setJSON([]);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SEARCH GLOBAL STUDENT ACCOUNTS
+        |--------------------------------------------------------------------------
+        */
+
+        $students = $this->studentModel
+            ->groupStart()
+                ->like('name', $query)
+                ->orLike('email', $query)
+            ->groupEnd()
+            ->orderBy('name', 'ASC')
+            ->findAll(10);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | GET CURRENT EXAMINER'S STUDENTS
+        |--------------------------------------------------------------------------
+        */
+
+        $linkedStudentIds = $this->examinerStudentModel
+            ->where(
+                'examiner_id',
+                session('user_id')
+            )
+            ->findColumn('student_id');
+
+
+        if (!$linkedStudentIds) {
+            $linkedStudentIds = [];
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | PREPARE RESPONSE
+        |--------------------------------------------------------------------------
+        */
+
+        $results = [];
+
+
+        foreach ($students as $student) {
+
+            $results[] = [
+                'id' => $student['id'],
+
+                'name' => $student['name'],
+
+                'email' => $student['email'],
+
+                'department' => $student['department'],
+
+                'already_added' => in_array(
+                    $student['id'],
+                    $linkedStudentIds
+                )
+            ];
+        }
+
+
+        return $this->response
+            ->setJSON($results);
     }
 }
