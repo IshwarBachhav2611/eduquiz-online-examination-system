@@ -74,3 +74,4 @@ $routes->post('/student/exam/submit/(:num)', 'StudentExamController::submit/$1')
 $routes->get('/student/exam/result/(:num)', 'StudentExamController::result/$1');
 $routes->get('/student/exams', 'StudentExamListController::index');
 $routes->get('/students/search', 'StudentController::search');
+$routes->post('/students/add-existing/(:num)','StudentController::addExisting/$1');

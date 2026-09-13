@@ -299,10 +299,15 @@ class StudentController extends BaseController
     |--------------------------------------------------------------------------
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | ADD EXISTING STUDENT
+    |--------------------------------------------------------------------------
+    */
+
     public function addExisting($studentId)
     {
         $examinerId = session('user_id');
-
 
         /*
         |--------------------------------------------------------------------------
@@ -314,50 +319,41 @@ class StudentController extends BaseController
             ->where('id', $studentId)
             ->first();
 
-
         if (!$student) {
 
-            return redirect()
-                ->back()
-                ->with(
-                    'error',
-                    'Student not found.'
-                );
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'success' => false,
+                    'message' => 'Student not found.'
+                ]);
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | CHECK EXISTING RELATIONSHIP
+        | CHECK WHETHER ALREADY LINKED
         |--------------------------------------------------------------------------
         */
 
         $alreadyLinked = $this->examinerStudentModel
-            ->where(
-                'examiner_id',
-                $examinerId
-            )
-            ->where(
-                'student_id',
-                $studentId
-            )
+            ->where('examiner_id', $examinerId)
+            ->where('student_id', $studentId)
             ->first();
-
 
         if ($alreadyLinked) {
 
-            return redirect()
-                ->back()
-                ->with(
-                    'error',
-                    'This student is already in your student list.'
-                );
+            return $this->response
+                ->setJSON([
+                    'success' => false,
+                    'message' => 'This student is already in your student list.'
+                ]);
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | CREATE RELATIONSHIP
+        | CREATE EXAMINER-STUDENT RELATIONSHIP
         |--------------------------------------------------------------------------
         */
 
@@ -367,23 +363,48 @@ class StudentController extends BaseController
         ]);
 
 
-        if (!$result) {
+        /*
+        |--------------------------------------------------------------------------
+        | CHECK INSERT
+        |--------------------------------------------------------------------------
+        */
 
-            return redirect()
-                ->back()
-                ->with(
-                    'error',
-                    'Unable to add student. Please try again.'
-                );
+        if ($result === false) {
+
+            log_message(
+                'error',
+                'ExaminerStudent INSERT failed: ' .
+                json_encode(
+                    $this->examinerStudentModel->errors()
+                )
+            );
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'success' => false,
+                    'message' => 'Unable to add student. Please try again.'
+                ]);
         }
 
 
-        return redirect()
-            ->to('/students')
-            ->with(
-                'success',
-                'Student added to your student list successfully.'
-            );
+        /*
+        |--------------------------------------------------------------------------
+        | SUCCESS
+        |--------------------------------------------------------------------------
+        */
+
+        return $this->response
+            ->setJSON([
+                'success' => true,
+                'message' => 'Student added to your student list successfully.',
+                'student' => [
+                    'id' => $student['id'],
+                    'name' => $student['name'],
+                    'email' => $student['email'],
+                    'department' => $student['department']
+                ]
+            ]);
     }
 
 
