@@ -18,7 +18,7 @@ $routes->post('/login', 'ExaminerAuthController::loginPost');
 
 $routes->get('/logout', 'ExaminerAuthController::logout');
 
-// Examiner Dashboard
+// Dashboard
 $routes->get('/dashboard', 'DashboardController::index');
 
 // Exams
@@ -48,30 +48,30 @@ $routes->post('/questions/update/(:num)', 'QuestionController::update/$1');
 
 $routes->get('/questions/delete/(:num)', 'QuestionController::delete/$1');
 
-// Student Management
+// Students
 $routes->get('/students', 'StudentController::index');
 $routes->get('/students/create', 'StudentController::create');
 $routes->post('/students/store', 'StudentController::store');
 
-$routes->get('/students/edit/(:num)', 'StudentController::edit/$1');
-$routes->post('/students/update/(:num)', 'StudentController::update/$1');
-
+$routes->post('/students/add-existing/(:num)', 'StudentController::addExisting/$1');
 $routes->post('/students/delete/(:num)', 'StudentController::delete/$1');
 
 $routes->get('/students/view/(:num)', 'StudentController::view/$1');
+$routes->get('/students/search', 'StudentController::search');
 
 // Student Authentication
 $routes->get('/student/login', 'StudentAuthController::login');
 $routes->post('/student/login', 'StudentAuthController::loginPost');
 $routes->get('/student/logout', 'StudentAuthController::logout');
 
-// Student Assigned Exams
+// Student Exams
 $routes->get('/student/exams', 'StudentExamListController::index');
 
 // Student Examination
 $routes->get('/student/exam/start/(:num)', 'StudentExamController::start/$1');
 $routes->post('/student/exam/submit/(:num)', 'StudentExamController::submit/$1');
 $routes->get('/student/exam/result/(:num)', 'StudentExamController::result/$1');
-$routes->get('/student/exams', 'StudentExamListController::index');
-$routes->get('/students/search', 'StudentController::search');
-$routes->post('/students/add-existing/(:num)','StudentController::addExisting/$1');
+
+// Student Profile
+$routes->get('/student/profile', 'StudentProfileController::index');
+$routes->post('/student/profile/update', 'StudentProfileController::update');

@@ -647,54 +647,33 @@
                                         <div class="action-buttons justify-content-end">
 
                                             <!-- VIEW -->
-
                                             <a
                                                 href="<?= base_url('students/view/' . $student['id']) ?>"
                                                 class="btn btn-outline-secondary btn-sm"
-                                                title="View"
+                                                title="View Student"
                                             >
-
                                                 <i class="bi bi-eye"></i>
-
                                             </a>
 
 
-                                            <!-- EDIT -->
-
-                                            <a
-                                                href="<?= base_url('students/edit/' . $student['id']) ?>"
-                                                class="btn btn-outline-primary btn-sm"
-                                                title="Edit"
-                                            >
-
-                                                <i class="bi bi-pencil"></i>
-
-                                            </a>
-
-
-                                            <!-- DELETE -->
-
+                                            <!-- REMOVE FROM MY STUDENTS -->
                                             <form
                                                 action="<?= base_url('students/delete/' . $student['id']) ?>"
                                                 method="post"
-                                                onsubmit="return confirm('Are you sure you want to delete this student?');"
+                                                onsubmit="return confirm(
+                                                    'Remove this student from your student list? The student account and all exam history will remain in EduQuiz.'
+                                                );"
                                             >
-
                                                 <?= csrf_field() ?>
 
                                                 <button
                                                     type="submit"
                                                     class="btn btn-outline-danger btn-sm"
-                                                    title="Delete"
+                                                    title="Remove from My Students"
                                                 >
-
-                                                    <i class="bi bi-trash"></i>
-
+                                                    <i class="bi bi-person-dash"></i>
                                                 </button>
-
-                                            </form>
-
-                                        </div>
+                                            </form>                                        </div>
 
                                     </td>
 

@@ -13,316 +13,291 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        html{
-            scroll-behavior:smooth;
+        html {
+            scroll-behavior: smooth;
         }
 
-        body{
-            font-family:'Segoe UI',sans-serif;
-            background:#F8FAFC;
-            color:#0F172A;
-            overflow-x:hidden;
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #F8FAFC;
+            color: #0F172A;
+            overflow-x: hidden;
         }
 
-        :root{
-            --primary:#2563EB;
-            --secondary:#1E40AF;
-            --dark:#0F172A;
-            --text:#64748B;
-            --card:#FFFFFF;
-            --border:#E2E8F0;
+        :root {
+            --primary: #2563EB;
+            --secondary: #1E40AF;
+            --dark: #0F172A;
+            --text: #64748B;
+            --card: #FFFFFF;
+            --border: #E2E8F0;
         }
 
-        /* NAVBAR */
-
-        .navbar{
-            padding:18px 0;
-            background:#fff;
-            border-bottom:1px solid var(--border);
+        .navbar {
+            padding: 18px 0;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
         }
 
-        .navbar-brand{
-            font-size:30px;
-            font-weight:700;
-            color:var(--primary)!important;
+        .navbar-brand {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--primary) !important;
         }
 
-        .nav-link{
-            font-weight:500;
-            margin-left:20px;
-            color:#334155!important;
+        .nav-link {
+            font-weight: 500;
+            margin-left: 20px;
+            color: #334155 !important;
         }
 
         .btn-login,
-        .btn-register{
-            border-radius:10px;
-            padding:10px 22px;
+        .btn-register {
+            border-radius: 10px;
+            padding: 10px 22px;
         }
 
-        .btn-register{
-            background:var(--primary);
+        .btn-register {
+            background: var(--primary);
         }
 
-        /* HERO */
-
-        .hero{
-            padding:80px 0;
+        .btn-student {
+            border-radius: 10px;
+            padding: 10px 22px;
         }
 
-        .hero h1{
-            font-size:55px;
-            font-weight:700;
-            line-height:1.2;
+        .hero {
+            padding: 80px 0;
         }
 
-        .hero p{
-            margin-top:25px;
-            font-size:19px;
-            line-height:1.8;
-            color:var(--text);
+        .hero h1 {
+            font-size: 55px;
+            font-weight: 700;
+            line-height: 1.2;
         }
 
-        .hero-buttons{
-            margin-top:35px;
+        .hero p {
+            margin-top: 25px;
+            font-size: 19px;
+            line-height: 1.8;
+            color: var(--text);
         }
 
-        .hero-buttons .btn{
-            padding:14px 30px;
-            border-radius:12px;
-            font-weight:600;
+        .hero-buttons {
+            margin-top: 35px;
         }
 
-        .hero-buttons .btn-primary{
-            background:var(--primary);
+        .hero-buttons .btn {
+            padding: 14px 25px;
+            border-radius: 12px;
+            font-weight: 600;
         }
 
-        .hero-buttons .btn-outline-primary{
-            border:2px solid var(--primary);
+        .hero-buttons .btn-primary {
+            background: var(--primary);
         }
 
-        /* FEATURS  */
-        .feature-list{
-            margin-top:35px;
+        .hero-buttons .btn-outline-primary {
+            border: 2px solid var(--primary);
         }
 
-        .feature-item{
-            display:flex;
-            align-items:center;
-            gap:12px;
-            margin-bottom:18px;
-            font-size:17px;
-            font-weight:500;
-            color:#0F172A;
+        .hero-buttons .btn-outline-success {
+            border: 2px solid #198754;
         }
 
-        .feature-item i{
-            font-size:20px;
-            color:#16A34A;
-            flex-shrink:0;
+        .dashboard {
+            background: #fff;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .08);
         }
 
-        @media (max-width:992px){
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-            .feature-list{
-                display:inline-block;
-                text-align:left;
-                margin-top:30px;
+        .logo-box {
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            border-radius: 12px;
+        }
+
+        .status {
+            background: #DCFCE7;
+            color: #15803D;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .small-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
+        }
+
+        @media (max-width: 992px) {
+
+            .hero {
+                text-align: center;
+                padding: 50px 0;
             }
 
-        }
-
-        /* DASHBOARD */
-
-        .dashboard{
-            background:#fff;
-            border-radius:25px;
-            padding:30px;
-            box-shadow:0 20px 60px rgba(0,0,0,.08);
-        }
-
-        .dashboard-header{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-        }
-
-        .logo-box{
-            width:45px;
-            height:45px;
-            background:var(--primary);
-            border-radius:12px;
-        }
-
-        .status{
-            background:#DCFCE7;
-            color:#15803D;
-            padding:8px 15px;
-            border-radius:30px;
-            font-size:14px;
-            font-weight:600;
-        }
-
-        .small-card{
-            background:#F8FAFC;
-            border:1px solid var(--border);
-            border-radius:18px;
-            padding:18px;
-        }
-
-        /* MOBILE */
-
-        @media (max-width:992px){
-
-            .hero{
-                text-align:center;
-                padding:50px 0;
+            .hero h1 {
+                font-size: 40px;
             }
 
-            .hero h1{
-                font-size:40px;
+            .dashboard {
+                margin-top: 50px;
             }
 
-            .dashboard{
-                margin-top:50px;
+            .hero-buttons .btn {
+                margin-bottom: 10px;
             }
-
         }
     </style>
+
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg">
 
-    <div class="container">
+        <div class="container">
 
-        <a class="navbar-brand" href="#">
-            <i class="bi bi-mortarboard-fill"></i>
-            EduQuiz
-        </a>
+            <a class="navbar-brand" href="<?= base_url('/') ?>">
+                <i class="bi bi-mortarboard-fill"></i>
+                EduQuiz
+            </a>
 
-        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#menu"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="menu">
+            <div class="collapse navbar-collapse" id="menu">
 
-            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
 
-                <li class="nav-item ms-lg-3">
+                    <li class="nav-item ms-lg-3">
+                        <a
+                            href="<?= base_url('student/login') ?>"
+                            class="btn btn-outline-success btn-student"
+                        >
+                            <i class="bi bi-person me-1"></i>
+                            Student Login
+                        </a>
+                    </li>
 
-                    <a href="<?= base_url('login') ?>" class="btn btn-outline-primary btn-login">
+                    <li class="nav-item ms-lg-2">
+                        <a
+                            href="<?= base_url('login') ?>"
+                            class="btn btn-outline-primary btn-login"
+                        >
+                            <i class="bi bi-person-badge me-1"></i>
+                            Examiner Login
+                        </a>
+                    </li>
 
-                        Login
+                    <li class="nav-item ms-lg-2">
+                        <a
+                            href="<?= base_url('register') ?>"
+                            class="btn btn-primary btn-register"
+                        >
+                            Get Started
+                        </a>
+                    </li>
 
-                    </a>
+                </ul>
 
-                </li>
-
-                <li class="nav-item ms-lg-2">
-
-                    <a href="<?= base_url('register') ?>" class="btn btn-primary btn-register">
-
-                        Get Started
-
-                    </a>
-
-                </li>
-
-            </ul>
+            </div>
 
         </div>
 
-    </div>
+    </nav>
 
-</nav>
 
-<section class="hero">
+    <section class="hero">
 
-    <div class="container">
+        <div class="container">
 
-        <div class="row align-items-center">
+            <div class="row align-items-center">
 
-            <div class="col-lg-6">
+                <div class="col-lg-6">
 
-                <span class="badge bg-primary px-3 py-2 rounded-pill">
+                    <span class="badge bg-primary px-3 py-2 rounded-pill">
+                        ONLINE EXAMINATION PLATFORM
+                    </span>
 
-                ONLINE EXAMINATION PLATFORM
+                    <h1 class="mt-4">
+                        Conduct Online Exams
+                        Without Complexity.
+                    </h1>
 
-                </span>
+                    <p>
+                        EduQuiz enables educational institutions, trainers and
+                        organizations to create professional online examinations,
+                        securely invite students, automate evaluation and access
+                        insightful performance reports from a single platform.
+                    </p>
 
-                <h1 class="mt-4">
+                    <div class="hero-buttons">
 
-                Conduct Online Exams
-                Without Complexity.
+                        <a
+                            href="<?= base_url('register') ?>"
+                            class="btn btn-primary me-2"
+                        >
+                            <i class="bi bi-person-plus me-1"></i>
+                            Create Account
+                        </a>
 
-                </h1>
+                        <a
+                            href="<?= base_url('student/login') ?>"
+                            class="btn btn-outline-success me-2"
+                        >
+                            <i class="bi bi-person me-1"></i>
+                            Student Login
+                        </a>
 
-                <p>
+                        <a
+                            href="<?= base_url('login') ?>"
+                            class="btn btn-outline-primary"
+                        >
+                            <i class="bi bi-person-badge me-1"></i>
+                            Examiner Login
+                        </a>
 
-                EduQuiz enables educational institutions, trainers and organizations to create professional online examinations, securely invite students, automate evaluation and access insightful performance reports from a single platform.
+                    </div>
 
-                </p>
-
-                <div class="hero-buttons">
-
-                <a href="<?= base_url('register') ?>" class="btn btn-primary me-2">
-
-                Create Account
-
-                </a>
-
-                <a href="<?= base_url('login') ?>" class="btn btn-outline-primary">
-
-                Examiner Login
-
-                </a>
-
-            </div>
-            
-            <!-- <div class="feature-list">
-
-                <div class="feature-item">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                    <span>Email Based Student Invitation</span>
                 </div>
 
-                <div class="feature-item">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                    <span>Automatic Result Generation</span>
-                </div>
-
-                <div class="feature-item">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                    <span>Performance Analytics & Reports</span>
-                </div>
-
-                <div class="feature-item">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                    <span>Secure Authentication & Timed Exams</span>
-                </div>
-
-            </div> -->
-            
-            </div>
 
                 <div class="col-lg-6">
 
                     <div class="dashboard">
 
-                        <div class="dashboard">
-
                         <div class="dashboard-header">
 
                             <div class="d-flex align-items-center">
 
-                                <div class="logo-box me-3 d-flex justify-content-center align-items-center">
+                                <div
+                                    class="logo-box me-3 d-flex justify-content-center align-items-center"
+                                >
                                     <i class="bi bi-mortarboard-fill text-white fs-4"></i>
                                 </div>
 
@@ -345,6 +320,7 @@
                             </span>
 
                         </div>
+
 
                         <div class="mt-4">
 
@@ -372,6 +348,7 @@
 
                                 </div>
 
+
                                 <div class="col-6">
 
                                     <div class="small-card d-flex align-items-center">
@@ -385,7 +362,7 @@
                                             </h6>
 
                                             <small class="text-muted">
-                                                Register Students
+                                                Manage Students
                                             </small>
 
                                         </div>
@@ -393,6 +370,7 @@
                                     </div>
 
                                 </div>
+
 
                                 <div class="col-6">
 
@@ -403,11 +381,11 @@
                                         <div>
 
                                             <h6 class="mb-1 fw-bold">
-                                                Email Invitations
+                                                Exam Sharing
                                             </h6>
 
                                             <small class="text-muted">
-                                                Send Credentials
+                                                Assign Exams
                                             </small>
 
                                         </div>
@@ -415,6 +393,7 @@
                                     </div>
 
                                 </div>
+
 
                                 <div class="col-6">
 
@@ -438,6 +417,7 @@
 
                                 </div>
 
+
                                 <div class="col-6">
 
                                     <div class="small-card d-flex align-items-center">
@@ -459,6 +439,7 @@
                                     </div>
 
                                 </div>
+
 
                                 <div class="col-6">
 
@@ -486,6 +467,7 @@
 
                         </div>
 
+
                         <div class="mt-4 p-3 rounded-4 bg-light border">
 
                             <div class="d-flex justify-content-between align-items-center">
@@ -507,6 +489,7 @@
                             </div>
 
                         </div>
+
                     </div>
 
                 </div>
@@ -515,45 +498,39 @@
 
         </div>
 
-    </div>
+    </section>
 
-</section>
 
-<footer class="py-4 border-top bg-white">
+    <footer class="py-4 border-top bg-white">
 
-    <div class="container">
+        <div class="container">
 
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center">
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center">
 
-            <div>
+                <div>
 
-                <h5 class="fw-bold text-primary mb-1">
+                    <h5 class="fw-bold text-primary mb-1">
+                        EduQuiz
+                    </h5>
 
-                    EduQuiz
+                    <p class="text-muted mb-0">
+                        Professional Online Examination Platform
+                    </p>
 
-                </h5>
+                </div>
 
-                <p class="text-muted mb-0">
-
-                    Professional Online Examination Platform
-
-                </p>
-
-            </div>
-
-            <div class="text-muted mt-3 mt-lg-0">
-
-            © 2026 EduQuiz. All Rights Reserved.
+                <div class="text-muted mt-3 mt-lg-0">
+                    © 2026 EduQuiz. All Rights Reserved.
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+    </footer>
 
-</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
