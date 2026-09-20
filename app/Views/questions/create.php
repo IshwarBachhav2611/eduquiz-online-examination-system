@@ -5,7 +5,10 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Add Questions | EduQuiz</title>
 
@@ -19,6 +22,37 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     >
 
+    <style>
+
+        body {
+            background: #f8fafc;
+        }
+
+        .upload-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .card-box {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+    </style>
+
 </head>
 
 
@@ -28,9 +62,7 @@
 <div class="container py-5">
 
 
-    <!-- ========================================================= -->
     <!-- HEADER -->
-    <!-- ========================================================= -->
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
@@ -61,10 +93,7 @@
     </div>
 
 
-
-    <!-- ========================================================= -->
     <!-- SUCCESS MESSAGE -->
-    <!-- ========================================================= -->
 
     <?php if (session()->getFlashdata('success')): ?>
 
@@ -85,10 +114,28 @@
     <?php endif; ?>
 
 
+    <!-- ERROR MESSAGE -->
 
-    <!-- ========================================================= -->
+    <?php if (session()->getFlashdata('error')): ?>
+
+        <div class="alert alert-danger alert-dismissible fade show">
+
+            <i class="bi bi-exclamation-circle me-2"></i>
+
+            <?= esc(session()->getFlashdata('error')) ?>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
+
+        </div>
+
+    <?php endif; ?>
+
+
     <!-- VALIDATION ERRORS -->
-    <!-- ========================================================= -->
 
     <?php if (session()->getFlashdata('errors')): ?>
 
@@ -118,10 +165,7 @@
     <?php endif; ?>
 
 
-
-    <!-- ========================================================= -->
     <!-- EXAM INFORMATION -->
-    <!-- ========================================================= -->
 
     <div class="card border-0 shadow-sm mb-4">
 
@@ -165,17 +209,12 @@
     </div>
 
 
-
-    <!-- ========================================================= -->
     <!-- QUESTION COUNT -->
-    <!-- ========================================================= -->
 
     <div class="d-flex justify-content-between align-items-center mb-3">
 
         <h5 class="fw-bold mb-0">
-
             Questions
-
         </h5>
 
 
@@ -188,10 +227,7 @@
     </div>
 
 
-
-    <!-- ========================================================= -->
     <!-- SAVED QUESTIONS -->
-    <!-- ========================================================= -->
 
     <?php if (!empty($questions)): ?>
 
@@ -202,7 +238,7 @@
                 <div class="card-body p-4">
 
 
-                    <!-- Question Header -->
+                    <!-- QUESTION HEADER -->
 
                     <div class="d-flex justify-content-between align-items-start">
 
@@ -240,24 +276,30 @@
                         </div>
 
 
-                        <!-- Edit -->
                         <div class="d-flex justify-content-end align-items-center gap-2">
 
                             <a
                                 href="<?= base_url('/questions/edit/' . $question['id']) ?>"
                                 class="btn btn-sm btn-outline-primary"
                             >
+
                                 <i class="bi bi-pencil"></i>
+
                                 Edit
+
                             </a>
+
 
                             <a
                                 href="<?= base_url('/questions/delete/' . $question['id']) ?>"
                                 class="btn btn-sm btn-outline-danger"
                                 onclick="return confirm('Are you sure you want to delete this question?');"
                             >
+
                                 <i class="bi bi-trash"></i>
+
                                 Delete
+
                             </a>
 
                         </div>
@@ -265,11 +307,9 @@
                     </div>
 
 
-
-                    <!-- Options -->
+                    <!-- OPTIONS -->
 
                     <div class="row g-3 mt-3">
-
 
                         <div class="col-md-6">
 
@@ -325,8 +365,7 @@
                     </div>
 
 
-
-                    <!-- Question Footer -->
+                    <!-- QUESTION FOOTER -->
 
                     <div class="d-flex gap-4 mt-3 text-muted">
 
@@ -335,6 +374,7 @@
                             <i class="bi bi-check-circle me-1"></i>
 
                             Correct:
+
                             <strong class="text-success">
 
                                 <?= esc($question['correct_option']) ?>
@@ -363,8 +403,7 @@
 
     <?php else: ?>
 
-
-        <!-- Empty State -->
+        <!-- EMPTY STATE -->
 
         <div class="card border-0 shadow-sm mb-4">
 
@@ -382,7 +421,7 @@
 
                 <p class="text-muted mb-0">
 
-                    Add your first question using the form below.
+                    Add your first question manually or upload a CSV file.
 
                 </p>
 
@@ -390,13 +429,145 @@
 
         </div>
 
-
     <?php endif; ?>
 
 
+    <!-- ========================================================= -->
+    <!-- UPLOAD CSV -->
+    <!-- ========================================================= -->
+
+    <div class="card border-0 shadow-sm mt-4">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-start gap-3">
+
+                <div class="upload-icon">
+
+                    <i class="bi bi-file-earmark-spreadsheet"></i>
+
+                </div>
+
+
+                <div class="flex-grow-1">
+
+                    <h5 class="fw-bold mb-1">
+
+                        Upload Questions from CSV
+
+                    </h5>
+
+                    <p class="text-muted mb-3">
+
+                        Add multiple questions at once by uploading
+                        a properly formatted CSV file.
+
+                    </p>
+
+
+                    <div class="alert alert-light border mb-4">
+
+                        <div class="fw-semibold mb-2">
+
+                            CSV format
+
+                        </div>
+
+                        <code class="text-dark">
+
+                            question,option_a,option_b,option_c,option_d,correct_option,marks
+
+                        </code>
+
+                    </div>
+
+
+                    <form
+                        action="<?= base_url('/questions/upload-csv/' . $exam['id']) ?>"
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
+
+                        <?= csrf_field() ?>
+
+
+                        <div class="row align-items-end g-3">
+
+                            <div class="col-md-8">
+
+                                <label
+                                    for="questions_csv"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Questions CSV File
+
+                                </label>
+
+
+                                <input
+                                    type="file"
+                                    name="questions_csv"
+                                    id="questions_csv"
+                                    class="form-control"
+                                    accept=".csv,text/csv"
+                                    required
+                                >
+
+
+                                <div class="form-text">
+
+                                    Only CSV files are allowed.
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-4">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary w-100"
+                                >
+
+                                    <i class="bi bi-upload me-1"></i>
+
+                                    Upload Questions
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+
+                    <div class="mt-3">
+
+                        <small class="text-muted">
+
+                            Each row should contain:
+
+                            Question, four options,
+                            correct option (A/B/C/D), and marks.
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 
     <!-- ========================================================= -->
-    <!-- ADD QUESTION FORM -->
+    <!-- ADD QUESTION MANUALLY -->
     <!-- ========================================================= -->
 
     <div class="card border-0 shadow-sm mt-4">
@@ -408,7 +579,7 @@
 
                 <i class="bi bi-plus-circle me-2"></i>
 
-                Add Another Question
+                Add Question Manually
 
             </h5>
 
@@ -421,7 +592,7 @@
                 <?= csrf_field() ?>
 
 
-                <!-- Question -->
+                <!-- QUESTION -->
 
                 <div class="mb-4">
 
@@ -447,8 +618,7 @@
                 </div>
 
 
-
-                <!-- Options -->
+                <!-- OPTIONS -->
 
                 <div class="row g-3">
 
@@ -478,7 +648,6 @@
                     </div>
 
 
-
                     <div class="col-md-6">
 
                         <label
@@ -504,7 +673,6 @@
                     </div>
 
 
-
                     <div class="col-md-6">
 
                         <label
@@ -528,7 +696,6 @@
                         >
 
                     </div>
-
 
 
                     <div class="col-md-6">
@@ -558,8 +725,7 @@
                 </div>
 
 
-
-                <!-- Correct Option + Marks -->
+                <!-- CORRECT OPTION + MARKS -->
 
                 <div class="row g-3 mt-2">
 
@@ -587,7 +753,8 @@
                                 Select correct option
                             </option>
 
-                            <option value="A"
+                            <option
+                                value="A"
                                 <?= old('correct_option') === 'A'
                                     ? 'selected'
                                     : '' ?>
@@ -595,7 +762,8 @@
                                 Option A
                             </option>
 
-                            <option value="B"
+                            <option
+                                value="B"
                                 <?= old('correct_option') === 'B'
                                     ? 'selected'
                                     : '' ?>
@@ -603,7 +771,8 @@
                                 Option B
                             </option>
 
-                            <option value="C"
+                            <option
+                                value="C"
                                 <?= old('correct_option') === 'C'
                                     ? 'selected'
                                     : '' ?>
@@ -611,7 +780,8 @@
                                 Option C
                             </option>
 
-                            <option value="D"
+                            <option
+                                value="D"
                                 <?= old('correct_option') === 'D'
                                     ? 'selected'
                                     : '' ?>
@@ -622,7 +792,6 @@
                         </select>
 
                     </div>
-
 
 
                     <div class="col-md-6">
@@ -653,8 +822,7 @@
                 </div>
 
 
-
-                <!-- Add Question -->
+                <!-- ADD QUESTION -->
 
                 <div class="d-flex justify-content-end mt-4">
 
@@ -678,31 +846,37 @@
     </div>
 
 
-
-    <!-- ========================================================= -->
     <!-- FINISH -->
-    <!-- ========================================================= -->
 
     <div class="card-box p-4 mt-4">
 
-         <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
 
             <div>
+
                 <h5 class="fw-bold mb-1">
                     Finished adding questions?
                 </h5>
 
                 <p class="text-muted mb-0">
-                    <?= count($questions) ?> question(s) added to this examination.
+
+                    <?= count($questions) ?>
+                    question(s) added to this examination.
+
                 </p>
+
             </div>
+
 
             <a
                 href="<?= base_url('/exams/review/' . $exam['id']) ?>"
                 class="btn btn-success"
             >
+
                 <i class="bi bi-check-circle"></i>
+
                 Finish Examination
+
             </a>
 
         </div>
@@ -712,10 +886,9 @@
 </div>
 
 
-
 <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-</script>
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
 
 </body>
 

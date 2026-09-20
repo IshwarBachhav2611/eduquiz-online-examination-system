@@ -13,6 +13,9 @@ $routes->get('/', 'HomeController::index');
 $routes->get('/register', 'ExaminerAuthController::register');
 $routes->post('/register', 'ExaminerAuthController::registerPost');
 
+$routes->get('/profile', 'ProfileController::index');
+$routes->post('/profile/update', 'ProfileController::update');
+
 $routes->get('/login', 'ExaminerAuthController::login');
 $routes->post('/login', 'ExaminerAuthController::loginPost');
 
@@ -34,6 +37,9 @@ $routes->get('/exams/delete/(:num)', 'ExamController::delete/$1');
 $routes->get('/exams/finish/(:num)', 'ExamController::finish/$1');
 $routes->get('/exams/review/(:num)', 'ExamController::review/$1');
 $routes->get('/exams/results/(:num)', 'ExamController::results/$1');
+$routes->get('/exams/results/download/(:num)','ExamController::downloadStudentResult/$1');
+$routes->get('/exams/results/merit-list/download/(:num)','ExamController::downloadMeritList/$1');
+$routes->post('/questions/upload-csv/(:num)','QuestionController::uploadCsv/$1');
 
 // Share Exam
 $routes->get('/exams/share/(:num)', 'ExamController::share/$1');
@@ -69,8 +75,12 @@ $routes->get('/student/exams', 'StudentExamListController::index');
 
 // Student Examination
 $routes->get('/student/exam/start/(:num)', 'StudentExamController::start/$1');
+$routes->post('/student/exam/begin/(:num)', 'StudentExamController::begin/$1');
+$routes->get('/student/exam/attempt/(:num)', 'StudentExamController::attempt/$1');
 $routes->post('/student/exam/submit/(:num)', 'StudentExamController::submit/$1');
 $routes->get('/student/exam/result/(:num)', 'StudentExamController::result/$1');
+$routes->get('/student/exam/result/(:num)','StudentExamController::result/$1');
+$routes->get('/student/exam/result/download/(:num)','StudentExamController::downloadResult/$1');
 
 // Student Profile
 $routes->get('/student/profile', 'StudentProfileController::index');

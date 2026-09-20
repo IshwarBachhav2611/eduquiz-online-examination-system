@@ -8,11 +8,13 @@
 
     <title>Student Management | EduQuiz</title>
 
+    <!-- Bootstrap 5 -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
+    <!-- Bootstrap Icons -->
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
@@ -20,14 +22,38 @@
 
     <style>
 
+        /* =====================================================
+           GLOBAL PAGE LAYOUT
+        ====================================================== */
+
+        html,
         body {
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+
             background: #f8fafc;
             color: #0f172a;
         }
 
+        /*
+         * This makes the main content occupy all remaining
+         * vertical space and pushes the footer to the bottom.
+         */
         .page-wrapper {
+            flex: 1 0 auto;
+            width: 100%;
             padding: 35px 0;
         }
+
+
+        /* =====================================================
+           PAGE HEADER
+        ====================================================== */
 
         .page-header {
             margin-bottom: 25px;
@@ -44,6 +70,11 @@
             margin: 0;
         }
 
+
+        /* =====================================================
+           MANAGEMENT CARD
+        ====================================================== */
+
         .management-card {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -51,9 +82,15 @@
             overflow: hidden;
         }
 
+
+        /* =====================================================
+           TOOLBAR
+        ====================================================== */
+
         .card-toolbar {
             padding: 20px;
             border-bottom: 1px solid #e2e8f0;
+
             display: flex;
             justify-content: space-between;
             gap: 15px;
@@ -65,6 +102,11 @@
             gap: 10px;
             flex: 1;
         }
+
+
+        /* =====================================================
+           SEARCH
+        ====================================================== */
 
         .search-box {
             position: relative;
@@ -82,6 +124,11 @@
         .search-box input {
             padding-left: 38px;
         }
+
+
+        /* =====================================================
+           TABLE
+        ====================================================== */
 
         .table-wrapper {
             overflow-x: auto;
@@ -107,6 +154,11 @@
             border-color: #f1f5f9;
         }
 
+
+        /* =====================================================
+           STUDENT DETAILS
+        ====================================================== */
+
         .student-name {
             font-weight: 600;
         }
@@ -120,13 +172,22 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
+
             padding: 5px 10px;
+
             background: #eff6ff;
             color: #2563eb;
+
             border-radius: 8px;
+
             font-size: 12px;
             font-weight: 600;
         }
+
+
+        /* =====================================================
+           ACTION BUTTONS
+        ====================================================== */
 
         .action-buttons {
             display: flex;
@@ -136,10 +197,16 @@
         .action-buttons .btn {
             width: 34px;
             height: 34px;
+
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
+
+        /* =====================================================
+           EMPTY STATE
+        ====================================================== */
 
         .empty-state {
             text-align: center;
@@ -149,13 +216,18 @@
         .empty-icon {
             width: 60px;
             height: 60px;
+
             margin: auto auto 15px;
+
             border-radius: 15px;
+
             background: #eff6ff;
             color: #2563eb;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             font-size: 25px;
         }
 
@@ -166,6 +238,11 @@
         .empty-state p {
             color: #64748b;
         }
+
+
+        /* =====================================================
+           MOBILE
+        ====================================================== */
 
         @media (max-width: 768px) {
 
@@ -199,6 +276,11 @@
     </style>
 
 </head>
+
+
+<body>
+
+
 <!-- =========================================================
      UPLOAD STUDENT LIST MODAL
 ========================================================= -->
@@ -236,10 +318,12 @@
 
                 </div>
 
+
                 <button
                     type="button"
                     class="btn-close"
                     data-bs-dismiss="modal"
+                    aria-label="Close"
                 ></button>
 
             </div>
@@ -265,6 +349,7 @@
                             Student List
                         </label>
 
+
                         <input
                             type="file"
                             class="form-control"
@@ -273,6 +358,7 @@
                             accept=".csv"
                             required
                         >
+
 
                         <div class="form-text">
 
@@ -344,62 +430,107 @@
 
 </div>
 
-<body>
+
+<!-- =========================================================
+     MAIN PAGE CONTENT
+========================================================= -->
 
 <div class="page-wrapper">
 
     <div class="container">
 
-        <!-- STUDENT CREDENTIALS -->
+
+        <!-- =====================================================
+             STUDENT CREDENTIALS
+        ====================================================== -->
+
         <?php if (session()->getFlashdata('student_credentials')): ?>
 
-            <?php $credentials = session()->getFlashdata('student_credentials'); ?>
+            <?php
+                $credentials =
+                    session()->getFlashdata('student_credentials');
+            ?>
+
 
             <div class="alert alert-success border-0 shadow-sm mb-4">
 
                 <div class="d-flex gap-3">
 
+
                     <div class="fs-4">
+
                         <i class="bi bi-check-circle"></i>
+
                     </div>
+
 
                     <div class="flex-grow-1">
 
+
                         <h6 class="fw-bold mb-1">
+
                             Student Added Successfully
+
                         </h6>
 
+
                         <p class="mb-3">
-                            Login credentials have been generated for this student.
+
+                            Login credentials have been generated
+                            for this student.
+
                         </p>
+
 
                         <div class="bg-white border rounded p-3">
 
+
                             <div class="mb-2">
+
                                 <small class="text-muted d-block">
+
                                     Student Login Email
+
                                 </small>
 
+
                                 <strong>
+
                                     <?= esc($credentials['email']) ?>
+
                                 </strong>
+
                             </div>
+
 
                             <div>
+
                                 <small class="text-muted d-block">
+
                                     Temporary Password
+
                                 </small>
 
+
                                 <strong>
+
                                     <?= esc($credentials['password']) ?>
+
                                 </strong>
+
                             </div>
+
 
                         </div>
 
+
                         <small class="text-muted d-block mt-2">
-                            Save these credentials. Email delivery will be added later.
+
+                            Save these credentials.
+                            Email delivery will be added later.
+
                         </small>
+
 
                     </div>
 
@@ -407,27 +538,43 @@
 
             </div>
 
+
         <?php endif; ?>
 
-        <!-- HEADER -->
+
+        <!-- =====================================================
+             PAGE HEADER
+        ====================================================== -->
+
         <div class="page-header">
 
-            <div class="d-flex justify-content-between align-items-start gap-3">
+
+            <div
+                class="d-flex justify-content-between
+                       align-items-start gap-3"
+            >
+
 
                 <div>
 
                     <h1>
+
                         Student Management
+
                     </h1>
 
+
                     <p>
+
                         Manage the students registered under your account.
+
                     </p>
 
                 </div>
 
 
                 <div class="d-flex gap-2 flex-wrap">
+
 
                     <!-- Dashboard -->
 
@@ -472,27 +619,37 @@
 
                     </a>
 
+
                 </div>
 
             </div>
 
         </div>
-        <!-- CARD -->
+
+
+        <!-- =====================================================
+             MANAGEMENT CARD
+        ====================================================== -->
 
         <div class="management-card">
 
 
-            <!-- TOOLBAR -->
+            <!-- =================================================
+                 TOOLBAR
+            ================================================== -->
 
             <div class="card-toolbar">
 
+
                 <div class="filters">
+
 
                     <!-- SEARCH -->
 
                     <div class="search-box">
 
                         <i class="bi bi-search"></i>
+
 
                         <input
                             type="text"
@@ -513,8 +670,11 @@
                     >
 
                         <option value="all">
+
                             All Departments
+
                         </option>
+
 
                         <?php
 
@@ -531,26 +691,37 @@
 
                         }
 
-                        $departments = array_unique($departments);
+                        $departments =
+                            array_unique($departments);
 
                         natcasesort($departments);
 
                         ?>
 
+
                         <?php foreach ($departments as $department): ?>
 
                             <option value="<?= esc($department) ?>">
+
                                 <?= esc($department) ?>
+
                             </option>
 
                         <?php endforeach; ?>
 
+
                     </select>
+
 
                 </div>
 
+
             </div>
 
+
+            <!-- =================================================
+                 STUDENTS
+            ================================================== -->
 
             <?php if (!empty($students)): ?>
 
@@ -559,7 +730,9 @@
 
                 <div class="table-wrapper">
 
+
                     <table class="table student-table">
+
 
                         <thead>
 
@@ -588,14 +761,30 @@
 
                         <tbody id="studentTableBody">
 
+
                             <?php foreach ($students as $student): ?>
+
 
                                 <tr
                                     class="student-row"
-                                    data-name="<?= esc(strtolower($student['name'])) ?>"
-                                    data-email="<?= esc(strtolower($student['email'])) ?>"
-                                    data-department="<?= esc(strtolower($student['department'] ?? '')) ?>"
+
+                                    data-name="<?= esc(
+                                        strtolower($student['name'])
+                                    ) ?>"
+
+                                    data-email="<?= esc(
+                                        strtolower($student['email'])
+                                    ) ?>"
+
+                                    data-department="<?= esc(
+                                        strtolower(
+                                            $student['department'] ?? ''
+                                        )
+                                    ) ?>"
                                 >
+
+
+                                    <!-- STUDENT -->
 
                                     <td>
 
@@ -608,6 +797,8 @@
                                     </td>
 
 
+                                    <!-- EMAIL -->
+
                                     <td>
 
                                         <span class="student-email">
@@ -619,71 +810,123 @@
                                     </td>
 
 
+                                    <!-- DEPARTMENT -->
+
                                     <td>
 
+
                                         <?php if (!empty($student['department'])): ?>
+
 
                                             <span class="department-badge">
 
                                                 <i class="bi bi-building"></i>
 
-                                                <?= esc($student['department']) ?>
+                                                <?= esc(
+                                                    $student['department']
+                                                ) ?>
 
                                             </span>
+
 
                                         <?php else: ?>
 
+
                                             <span class="text-muted">
+
                                                 No Department
+
                                             </span>
 
+
                                         <?php endif; ?>
+
 
                                     </td>
 
 
+                                    <!-- ACTIONS -->
+
                                     <td>
 
-                                        <div class="action-buttons justify-content-end">
+
+                                        <div
+                                            class="action-buttons
+                                                   justify-content-end"
+                                        >
+
 
                                             <!-- VIEW -->
+
                                             <a
-                                                href="<?= base_url('students/view/' . $student['id']) ?>"
-                                                class="btn btn-outline-secondary btn-sm"
+                                                href="<?= base_url(
+                                                    'students/view/' .
+                                                    $student['id']
+                                                ) ?>"
+
+                                                class="btn
+                                                       btn-outline-secondary
+                                                       btn-sm"
+
                                                 title="View Student"
                                             >
+
                                                 <i class="bi bi-eye"></i>
+
                                             </a>
 
 
-                                            <!-- REMOVE FROM MY STUDENTS -->
+                                            <!-- REMOVE -->
+
                                             <form
-                                                action="<?= base_url('students/delete/' . $student['id']) ?>"
+                                                action="<?= base_url(
+                                                    'students/delete/' .
+                                                    $student['id']
+                                                ) ?>"
+
                                                 method="post"
+
                                                 onsubmit="return confirm(
                                                     'Remove this student from your student list? The student account and all exam history will remain in EduQuiz.'
                                                 );"
                                             >
+
                                                 <?= csrf_field() ?>
+
 
                                                 <button
                                                     type="submit"
                                                     class="btn btn-outline-danger btn-sm"
                                                     title="Remove from My Students"
                                                 >
-                                                    <i class="bi bi-person-dash"></i>
+
+                                                    <i
+                                                        class="bi bi-person-dash"
+                                                    ></i>
+
                                                 </button>
-                                            </form>                                        </div>
+
+
+                                            </form>
+
+
+                                        </div>
+
 
                                     </td>
 
+
                                 </tr>
+
 
                             <?php endforeach; ?>
 
+
                         </tbody>
 
+
                     </table>
+
 
                 </div>
 
@@ -702,13 +945,21 @@
 
                     </div>
 
+
                     <h4>
+
                         No Students Found
+
                     </h4>
 
+
                     <p>
-                        Try changing your search or department filter.
+
+                        Try changing your search
+                        or department filter.
+
                     </p>
+
 
                 </div>
 
@@ -716,9 +967,10 @@
             <?php else: ?>
 
 
-                <!-- EMPTY -->
+                <!-- EMPTY STATE -->
 
                 <div class="empty-state">
+
 
                     <div class="empty-icon">
 
@@ -726,13 +978,21 @@
 
                     </div>
 
+
                     <h4>
+
                         No Students Yet
+
                     </h4>
 
+
                     <p>
-                        Add your first student to start managing students.
+
+                        Add your first student to start
+                        managing students.
+
                     </p>
+
 
                     <a
                         href="<?= base_url('students/create') ?>"
@@ -745,6 +1005,7 @@
 
                     </a>
 
+
                 </div>
 
 
@@ -753,99 +1014,156 @@
 
         </div>
 
+
     </div>
 
 </div>
 
 
+<!-- =========================================================
+     COMMON FOOTER
+========================================================= -->
+
+<?= view('layouts/footer') ?>
+
+
+<!-- =========================================================
+     SEARCH / FILTER JAVASCRIPT
+========================================================= -->
+
 <script>
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
 
-    const search =
-        document.getElementById('studentSearch');
+        const search =
+            document.getElementById(
+                'studentSearch'
+            );
 
-    const filter =
-        document.getElementById('departmentFilter');
+        const filter =
+            document.getElementById(
+                'departmentFilter'
+            );
 
-    const rows =
-        document.querySelectorAll('.student-row');
+        const rows =
+            document.querySelectorAll(
+                '.student-row'
+            );
 
-    const noResult =
-        document.getElementById('noResult');
-
-
-    function filterStudents() {
-
-        const searchText =
-            search.value.toLowerCase().trim();
-
-        const department =
-            filter.value.toLowerCase().trim();
-
-        let visible = 0;
-
-
-        rows.forEach(function (row) {
-
-            const name =
-                row.dataset.name || '';
-
-            const email =
-                row.dataset.email || '';
-
-            const rowDepartment =
-                row.dataset.department || '';
+        const noResult =
+            document.getElementById(
+                'noResult'
+            );
 
 
-            const matchesSearch =
-                name.includes(searchText) ||
-                email.includes(searchText);
+        function filterStudents() {
 
-            const matchesDepartment =
-                department === 'all' ||
-                rowDepartment === department;
+            const searchText =
+                search.value
+                    .toLowerCase()
+                    .trim();
 
 
-            if (matchesSearch && matchesDepartment) {
+            const department =
+                filter.value
+                    .toLowerCase()
+                    .trim();
 
-                row.style.display = '';
 
-                visible++;
+            let visible = 0;
 
-            } else {
 
-                row.style.display = 'none';
+            rows.forEach(
+                function (row) {
+
+                    const name =
+                        row.dataset.name || '';
+
+
+                    const email =
+                        row.dataset.email || '';
+
+
+                    const rowDepartment =
+                        row.dataset.department || '';
+
+
+                    const matchesSearch =
+                        name.includes(searchText) ||
+                        email.includes(searchText);
+
+
+                    const matchesDepartment =
+                        department === 'all' ||
+                        rowDepartment === department;
+
+
+                    if (
+                        matchesSearch &&
+                        matchesDepartment
+                    ) {
+
+                        row.style.display = '';
+
+                        visible++;
+
+                    } else {
+
+                        row.style.display = 'none';
+
+                    }
+
+                }
+            );
+
+
+            if (noResult) {
+
+                noResult.style.display =
+                    visible === 0
+                        ? 'block'
+                        : 'none';
 
             }
 
-        });
+        }
 
 
-        if (noResult) {
+        if (search) {
 
-            noResult.style.display =
-                visible === 0 ? 'block' : 'none';
+            search.addEventListener(
+                'input',
+                filterStudents
+            );
+
+        }
+
+
+        if (filter) {
+
+            filter.addEventListener(
+                'change',
+                filterStudents
+            );
 
         }
 
     }
-
-
-    search.addEventListener(
-        'input',
-        filterStudents
-    );
-
-
-    filter.addEventListener(
-        'change',
-        filterStudents
-    );
-
-});
+);
 
 </script>
+
+
+<!-- =========================================================
+     BOOTSTRAP JAVASCRIPT
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
 
 </body>
 

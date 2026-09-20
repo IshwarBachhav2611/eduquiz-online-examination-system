@@ -25,25 +25,71 @@
         rel="stylesheet"
         href="<?= base_url('assets/css/dashboard.css') ?>">
 
+    <style>
+
+        /* See All Button */
+
+        .see-all-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+
+            padding: 8px 18px;
+
+            border: 1px solid #0d6efd;
+            border-radius: 8px;
+
+            background: transparent;
+
+            color: #0d6efd;
+
+            text-decoration: none;
+
+            font-size: 15px;
+            font-weight: 500;
+
+            transition: all 0.2s ease;
+        }
+
+        .see-all-btn:hover {
+            background: #0d6efd;
+            color: #fff;
+        }
+
+        .see-all-btn i {
+            font-size: 14px;
+        }
+
+    </style>
+
 </head>
 
+
 <body>
+
 
 <!-- =====================================================
      NAVIGATION BAR
 ====================================================== -->
+
 <nav class="navbar navbar-expand-lg">
 
     <div class="container">
 
+
         <!-- Logo -->
+
         <a class="navbar-brand"
            href="<?= base_url('dashboard') ?>">
+
             EduQuiz
+
         </a>
 
 
         <!-- Mobile Toggle -->
+
         <button
             class="navbar-toggler"
             type="button"
@@ -59,12 +105,16 @@
 
 
         <!-- Navigation -->
+
         <div
             class="collapse navbar-collapse"
             id="menu">
 
 
             <ul class="navbar-nav mx-auto">
+
+
+                <!-- Dashboard -->
 
                 <li class="nav-item">
 
@@ -79,6 +129,8 @@
                 </li>
 
 
+                <!-- Examinations -->
+
                 <li class="nav-item">
 
                     <a
@@ -92,6 +144,8 @@
                 </li>
 
 
+                <!-- Students -->
+
                 <li class="nav-item">
 
                     <a
@@ -104,18 +158,6 @@
 
                 </li>
 
-
-                <li class="nav-item">
-
-                    <a
-                        class="nav-link"
-                        href="<?= base_url('results') ?>">
-
-                        Results
-
-                    </a>
-
-                </li>
 
             </ul>
 
@@ -190,7 +232,9 @@
 
 
                     <li>
+
                         <hr class="dropdown-divider">
+
                     </li>
 
 
@@ -215,6 +259,7 @@
 
                 </ul>
 
+
             </div>
 
 
@@ -223,6 +268,8 @@
     </div>
 
 </nav>
+
+
 
 <!-- =====================================================
      DASHBOARD
@@ -240,6 +287,7 @@
         <div class="welcome-card">
 
             <div class="row align-items-center">
+
 
                 <div class="col-lg-8">
 
@@ -267,15 +315,37 @@
                     </p>
 
 
-                    <a
-                        href="<?= base_url('exams/create') ?>"
-                        class="btn-create">
+                    <!-- Buttons -->
 
-                        <i class="bi bi-plus-circle me-2"></i>
+                    <div class="d-flex flex-wrap gap-2">
 
-                        Create New Examination
+                        <!-- Create Examination -->
 
-                    </a>
+                        <a
+                            href="<?= base_url('exams/create') ?>"
+                            class="btn-create">
+
+                            <i class="bi bi-plus-circle me-2"></i>
+
+                            Create New Examination
+
+                        </a>
+
+
+                        <!-- All Examinations -->
+
+                        <a
+                            href="<?= base_url('exams') ?>"
+                            class="btn-create">
+
+                            <i class="bi bi-grid-3x3-gap me-2"></i>
+
+                            All Examinations
+
+                        </a>
+
+                    </div>
+
 
                 </div>
 
@@ -289,9 +359,11 @@
 
                 </div>
 
+
             </div>
 
         </div>
+
 
 
         <!-- =================================================
@@ -314,11 +386,15 @@
                     </div>
 
                     <h2>
+
                         <?= esc($totalExams) ?>
+
                     </h2>
 
                     <p>
+
                         Total Examinations
+
                     </p>
 
                 </div>
@@ -339,11 +415,15 @@
                     </div>
 
                     <h2>
+
                         <?= esc($publishedExams) ?>
+
                     </h2>
 
                     <p>
+
                         Published Exams
+
                     </p>
 
                 </div>
@@ -364,11 +444,15 @@
                     </div>
 
                     <h2>
+
                         <?= esc($draftExams) ?>
+
                     </h2>
 
                     <p>
+
                         Draft Exams
+
                     </p>
 
                 </div>
@@ -389,83 +473,57 @@
                     </div>
 
                     <h2>
+
                         <?= esc($totalQuestions) ?>
+
                     </h2>
 
                     <p>
+
                         Total Questions
+
                     </p>
 
                 </div>
 
             </div>
 
+
         </div>
 
 
+
         <!-- =================================================
-             MY EXAMINATIONS
+             RECENT EXAMINATIONS
         ================================================== -->
 
         <div id="examinations">
 
-            <h2 class="section-title">
 
-                My Examinations
+            <!-- Section Heading -->
 
-            </h2>
+            <div
+                class="d-flex align-items-center justify-content-between flex-wrap gap-3 section-heading">
 
+                <h2 class="section-title mb-0">
 
-            <!-- Search + Create -->
+                    Recent Examinations
 
-            <div class="row align-items-center mb-4">
-
-                <div class="col-lg-7 mb-3 mb-lg-0">
-
-                    <div class="input-group">
-
-                        <span class="input-group-text">
-
-                            <i class="bi bi-search"></i>
-
-                        </span>
-
-                        <input
-                            type="text"
-                            id="examSearch"
-                            class="form-control"
-                            placeholder="Search examinations...">
-
-                    </div>
-
-                </div>
-
-
-                <div class="col-lg-5 text-lg-end">
-
-                    <a
-                        href="<?= base_url('exams/create') ?>"
-                        class="btn btn-primary">
-
-                        <i class="bi bi-plus-circle me-2"></i>
-
-                        Create Examination
-
-                    </a>
-
-                </div>
+                </h2>
 
             </div>
 
 
+
             <!-- =================================================
-                 DYNAMIC EXAMINATION LIST
+                 RECENT EXAMINATION LIST
             ================================================== -->
 
             <div id="examList">
 
 
-                <?php if (empty($exams)): ?>
+                <?php if (empty($recentExams)): ?>
+
 
                     <!-- Empty State -->
 
@@ -477,13 +535,20 @@
 
                         </div>
 
+
                         <h4>
+
                             No examinations yet
+
                         </h4>
 
+
                         <p>
+
                             Create your first examination to get started.
+
                         </p>
+
 
                         <a
                             href="<?= base_url('exams/create') ?>"
@@ -501,12 +566,22 @@
                 <?php else: ?>
 
 
-                    <?php foreach ($exams as $exam): ?>
+                    <?php
+                    /*
+                     * Show only the latest examination
+                     */
+                    $latestExam = array_slice($recentExams, 0, 1);
+                    ?>
+
+
+                    <?php foreach ($latestExam as $exam): ?>
+
 
                         <div
                             class="exam-card mb-4"
                             data-exam-title="<?= esc(strtolower($exam['title'])) ?>"
                             data-exam-subject="<?= esc(strtolower($exam['subject'])) ?>">
+
 
                             <div class="row align-items-center">
 
@@ -515,7 +590,10 @@
 
                                 <div class="col-lg-8">
 
-                                    <div class="d-flex align-items-center mb-3 flex-wrap">
+
+                                    <div
+                                        class="d-flex align-items-center mb-3 flex-wrap">
+
 
                                         <h4 class="mb-0 fw-bold">
 
@@ -526,7 +604,8 @@
 
                                         <?php if ($exam['status'] === 'Published'): ?>
 
-                                            <span class="badge bg-success ms-3">
+                                            <span
+                                                class="badge bg-success ms-3">
 
                                                 Published
 
@@ -534,7 +613,8 @@
 
                                         <?php else: ?>
 
-                                            <span class="badge bg-warning text-dark ms-3">
+                                            <span
+                                                class="badge bg-warning text-dark ms-3">
 
                                                 Draft
 
@@ -542,12 +622,15 @@
 
                                         <?php endif; ?>
 
+
                                     </div>
+
 
 
                                     <p class="text-muted mb-4">
 
                                         <?= esc($exam['subject']) ?>
+
 
                                         <?php if (!empty($exam['description'])): ?>
 
@@ -562,7 +645,9 @@
 
                                         <?php endif; ?>
 
+
                                     </p>
+
 
 
                                     <div class="row">
@@ -578,19 +663,32 @@
 
                                             </small>
 
+
                                             <strong>
 
                                                 <?php
+
                                                 $examQuestionCount = 0;
 
-                                                foreach ($questionsCount ?? [] as $count) {
+                                                foreach (
+                                                    $questionsCount ?? []
+                                                    as $count
+                                                ) {
 
-                                                    if ($count['exam_id'] == $exam['id']) {
-                                                        $examQuestionCount = $count['total'];
+                                                    if (
+                                                        $count['exam_id']
+                                                        == $exam['id']
+                                                    ) {
+
+                                                        $examQuestionCount =
+                                                            $count['total'];
+
                                                         break;
+
                                                     }
 
                                                 }
+
                                                 ?>
 
                                                 <?= esc($examQuestionCount) ?>
@@ -598,6 +696,7 @@
                                             </strong>
 
                                         </div>
+
 
 
                                         <!-- Duration -->
@@ -610,6 +709,7 @@
 
                                             </small>
 
+
                                             <strong>
 
                                                 <?= esc($exam['duration']) ?>
@@ -618,6 +718,7 @@
                                             </strong>
 
                                         </div>
+
 
 
                                         <!-- Marks -->
@@ -630,6 +731,7 @@
 
                                             </small>
 
+
                                             <strong>
 
                                                 <?= esc($exam['total_marks']) ?>
@@ -637,6 +739,7 @@
                                             </strong>
 
                                         </div>
+
 
 
                                         <!-- Exam Date -->
@@ -649,12 +752,15 @@
 
                                             </small>
 
+
                                             <strong>
 
                                                 <?= !empty($exam['exam_date'])
                                                     ? date(
                                                         'd M Y',
-                                                        strtotime($exam['exam_date'])
+                                                        strtotime(
+                                                            $exam['exam_date']
+                                                        )
                                                     )
                                                     : '--'
                                                 ?>
@@ -663,9 +769,12 @@
 
                                         </div>
 
+
                                     </div>
 
+
                                 </div>
+
 
 
                                 <!-- Actions -->
@@ -674,49 +783,71 @@
 
                                     <div class="exam-actions">
 
-                                        <a href="<?= base_url('exams/review/' . $exam['id']) ?>"
-                                        class="action-btn review-btn">
+
+                                        <!-- Review -->
+
+                                        <a
+                                            href="<?= base_url('exams/review/' . $exam['id']) ?>"
+                                            class="action-btn review-btn">
 
                                             <i class="bi bi-eye"></i>
+
                                             Review
 
                                         </a>
 
 
-                                        <a href="<?= base_url('exams/edit/' . $exam['id']) ?>"
-                                        class="action-btn edit-btn">
+
+                                        <!-- Edit -->
+
+                                        <a
+                                            href="<?= base_url('exams/edit/' . $exam['id']) ?>"
+                                            class="action-btn edit-btn">
 
                                             <i class="bi bi-pencil-square"></i>
+
                                             Edit
 
                                         </a>
 
 
-                                        <a href="<?= base_url('exams/share/' . $exam['id']) ?>"
-                                        class="action-btn share-btn">
+
+                                        <!-- Share -->
+
+                                        <a
+                                            href="<?= base_url('exams/share/' . $exam['id']) ?>"
+                                            class="action-btn share-btn">
 
                                             <i class="bi bi-send"></i>
+
                                             Share
 
                                         </a>
 
 
+
+                                        <!-- Results -->
+
                                         <?php if ($exam['status'] === 'Completed'): ?>
 
-                                            <a href="<?= base_url('exams/results/' . $exam['id']) ?>"
-                                            class="action-btn result-btn">
+                                            <a
+                                                href="<?= base_url('exams/results/' . $exam['id']) ?>"
+                                                class="action-btn result-btn">
 
                                                 <i class="bi bi-bar-chart"></i>
+
                                                 Results
 
                                             </a>
 
                                         <?php else: ?>
 
-                                            <button class="action-btn result-btn disabled"
-                                                    disabled>
+                                            <button
+                                                class="action-btn result-btn disabled"
+                                                disabled>
 
                                                 <i class="bi bi-lock"></i>
+
                                                 Results
 
                                             </button>
@@ -724,44 +855,78 @@
                                         <?php endif; ?>
 
 
-                                        <form action="<?= base_url('exams/delete/' . $exam['id']) ?>"
+
+                                        <!-- Delete -->
+
+                                        <form
+                                            action="<?= base_url('exams/delete/' . $exam['id']) ?>"
                                             method="post"
                                             class="delete-form">
 
                                             <?= csrf_field() ?>
 
-                                            <button type="submit"
-                                                    class="action-btn delete-btn"
-                                                    onclick="return confirm('Are you sure you want to delete this examination?')">
+
+                                            <button
+                                                type="submit"
+                                                class="action-btn delete-btn"
+                                                onclick="return confirm('Are you sure you want to delete this examination?')">
 
                                                 <i class="bi bi-trash"></i>
+
                                                 Delete
 
                                             </button>
 
                                         </form>
 
+
                                     </div>
-                                    
+
                                 </div>
+
 
                             </div>
 
                         </div>
 
+
                     <?php endforeach; ?>
+
+
+                    <!-- =================================================
+                         SEE ALL
+                    ================================================== -->
+
+                    <div class="text-center mt-3 mb-4">
+
+                        <a
+                            href="<?= base_url('exams') ?>"
+                            class="see-all-btn">
+
+                            See All
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </a>
+
+                    </div>
 
 
                 <?php endif; ?>
 
+
             </div>
 
+
         </div>
+
 
     </div>
 
 </div>
 
+
+<?= view('layouts/footer') ?>
 
 <!-- =====================================================
      FLOATING CREATE BUTTON
@@ -776,57 +941,13 @@
 </a>
 
 
+
 <!-- Bootstrap JS -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
 </script>
 
-
-<!-- Search -->
-
-<script>
-
-const searchInput = document.getElementById('examSearch');
-
-if (searchInput) {
-
-    searchInput.addEventListener('input', function () {
-
-        const searchValue =
-            this.value.toLowerCase().trim();
-
-        const examCards =
-            document.querySelectorAll('.exam-card');
-
-        examCards.forEach(function (card) {
-
-            const title =
-                card.dataset.examTitle || '';
-
-            const subject =
-                card.dataset.examSubject || '';
-
-            if (
-                title.includes(searchValue) ||
-                subject.includes(searchValue)
-            ) {
-
-                card.style.display = '';
-
-            } else {
-
-                card.style.display = 'none';
-
-            }
-
-        });
-
-    });
-
-}
-
-</script>
 
 </body>
 

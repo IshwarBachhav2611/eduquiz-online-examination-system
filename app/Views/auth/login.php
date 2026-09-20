@@ -197,7 +197,7 @@
     </div>
 
 </div>
-
+<?= view('layouts/footer') ?>
 <script>
 
 function togglePassword(){

@@ -16,22 +16,18 @@ class QuestionController extends BaseController
         $this->examModel = new ExamModel();
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Show Add Question Page
-    |--------------------------------------------------------------------------
-    */
-
     public function create($examId)
     {
-        $exam = $this->examModel->find($examId);
+        $exam = $this->examModel
+            ->where('id', $examId)
+            ->where('examiner_id', session('user_id'))
+            ->first();
 
         if (!$exam) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
-        // Get all questions belonging to this examination
         $questions = $this->questionModel
             ->where('exam_id', $examId)
             ->orderBy('id', 'ASC')
@@ -43,31 +39,26 @@ class QuestionController extends BaseController
         ]);
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Save Question
-    |--------------------------------------------------------------------------
-    */
-
     public function store($examId)
     {
-        // Check whether exam exists
-        $exam = $this->examModel->find($examId);
+        $exam = $this->examModel
+            ->where('id', $examId)
+            ->where('examiner_id', session('user_id'))
+            ->first();
 
         if (!$exam) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
-
-        // Validation rules
         $rules = [
 
             'question' => [
                 'rules' => 'required|min_length[5]',
                 'errors' => [
                     'required' => 'Please enter the question.',
-                    'min_length' => 'Question must contain at least 5 characters.'
+                    'min_length' =>
+                        'Question must contain at least 5 characters.'
                 ]
             ],
 
@@ -102,8 +93,10 @@ class QuestionController extends BaseController
             'correct_option' => [
                 'rules' => 'required|in_list[A,B,C,D]',
                 'errors' => [
-                    'required' => 'Please select the correct option.',
-                    'in_list' => 'Invalid correct option selected.'
+                    'required' =>
+                        'Please select the correct option.',
+                    'in_list' =>
+                        'Invalid correct option selected.'
                 ]
             ],
 
@@ -112,24 +105,24 @@ class QuestionController extends BaseController
                 'errors' => [
                     'required' => 'Marks are required.',
                     'integer' => 'Marks must be a number.',
-                    'greater_than' => 'Marks must be greater than 0.'
+                    'greater_than' =>
+                        'Marks must be greater than 0.'
                 ]
             ]
 
         ];
 
-
-        // Validate
         if (!$this->validate($rules)) {
 
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('errors', $this->validator->getErrors());
+                ->with(
+                    'errors',
+                    $this->validator->getErrors()
+                );
         }
 
-
-        // Prepare question data
         $questionData = [
 
             'exam_id' => $examId,
@@ -154,110 +147,443 @@ class QuestionController extends BaseController
                 $this->request->getPost('option_d')
             ),
 
-            'correct_option' => $this->request->getPost('correct_option'),
+            'correct_option' =>
+                $this->request->getPost('correct_option'),
 
-            'marks' => $this->request->getPost('marks')
+            'marks' =>
+                $this->request->getPost('marks')
 
         ];
 
-
-        // Save question
         $this->questionModel->insert($questionData);
-
 
         return redirect()
             ->to('/questions/create/' . $examId)
-            ->with('success', 'Question added successfully.');
+            ->with(
+                'success',
+                'Question added successfully.'
+            );
     }
 
+    public function uploadCsv($examId)
+    {
+        $exam = $this->examModel
+            ->where('id', $examId)
+            ->where('examiner_id', session('user_id'))
+            ->first();
 
-    /*
-    |--------------------------------------------------------------------------
-    | Edit Question
-    |--------------------------------------------------------------------------
-    */
+        if (!$exam) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
+        }
+
+        $file = $this->request->getFile('questions_csv');
+
+        if (!$file || !$file->isValid()) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Please select a valid CSV file.'
+                );
+        }
+
+        if ($file->getClientExtension() !== 'csv') {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Only CSV files are allowed.'
+                );
+        }
+
+        $filePath = $file->getTempName();
+
+        $handle = fopen($filePath, 'r');
+
+        if ($handle === false) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Unable to read the uploaded CSV file.'
+                );
+        }
+
+        $header = fgetcsv($handle);
+
+        if (!$header) {
+            fclose($handle);
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'The CSV file is empty.'
+                );
+        }
+
+        $header = array_map(
+            function ($value) {
+                return strtolower(
+                    trim(
+                        preg_replace(
+                            '/^\xEF\xBB\xBF/',
+                            '',
+                            $value
+                        )
+                    )
+                );
+            },
+            $header
+        );
+
+        $requiredColumns = [
+            'question',
+            'option_a',
+            'option_b',
+            'option_c',
+            'option_d',
+            'correct_option',
+            'marks'
+        ];
+
+        foreach ($requiredColumns as $column) {
+
+            if (!in_array($column, $header, true)) {
+
+                fclose($handle);
+
+                return redirect()
+                    ->back()
+                    ->with(
+                        'error',
+                        'Invalid CSV format. Missing column: ' .
+                        $column
+                    );
+            }
+        }
+
+        $columnIndex = array_flip($header);
+
+        $questions = [];
+        $rowNumber = 1;
+
+        while (($row = fgetcsv($handle)) !== false) {
+
+            $rowNumber++;
+
+            if (
+                count($row) === 1 &&
+                trim($row[0]) === ''
+            ) {
+                continue;
+            }
+
+            $question = trim(
+                $row[$columnIndex['question']] ?? ''
+            );
+
+            $optionA = trim(
+                $row[$columnIndex['option_a']] ?? ''
+            );
+
+            $optionB = trim(
+                $row[$columnIndex['option_b']] ?? ''
+            );
+
+            $optionC = trim(
+                $row[$columnIndex['option_c']] ?? ''
+            );
+
+            $optionD = trim(
+                $row[$columnIndex['option_d']] ?? ''
+            );
+
+            $correctOption = strtoupper(
+                trim(
+                    $row[$columnIndex['correct_option']] ?? ''
+                )
+            );
+
+            $marks = trim(
+                $row[$columnIndex['marks']] ?? ''
+            );
+
+            if ($question === '') {
+
+                fclose($handle);
+
+                return redirect()
+                    ->back()
+                    ->with(
+                        'error',
+                        'Row ' . $rowNumber .
+                        ': Question cannot be empty.'
+                    );
+            }
+
+            if (
+                $optionA === '' ||
+                $optionB === '' ||
+                $optionC === '' ||
+                $optionD === ''
+            ) {
+
+                fclose($handle);
+
+                return redirect()
+                    ->back()
+                    ->with(
+                        'error',
+                        'Row ' . $rowNumber .
+                        ': All four options are required.'
+                    );
+            }
+
+            if (
+                !in_array(
+                    $correctOption,
+                    ['A', 'B', 'C', 'D'],
+                    true
+                )
+            ) {
+
+                fclose($handle);
+
+                return redirect()
+                    ->back()
+                    ->with(
+                        'error',
+                        'Row ' . $rowNumber .
+                        ': Correct option must be A, B, C or D.'
+                    );
+            }
+
+            if (
+                $marks === '' ||
+                !is_numeric($marks) ||
+                (int) $marks <= 0
+            ) {
+
+                fclose($handle);
+
+                return redirect()
+                    ->back()
+                    ->with(
+                        'error',
+                        'Row ' . $rowNumber .
+                        ': Marks must be greater than 0.'
+                    );
+            }
+
+            $questions[] = [
+
+                'exam_id' => $examId,
+
+                'question' => $question,
+
+                'option_a' => $optionA,
+
+                'option_b' => $optionB,
+
+                'option_c' => $optionC,
+
+                'option_d' => $optionD,
+
+                'correct_option' => $correctOption,
+
+                'marks' => (int) $marks
+
+            ];
+        }
+
+        fclose($handle);
+
+        if (empty($questions)) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'No valid questions were found in the CSV file.'
+                );
+        }
+
+        $db = \Config\Database::connect();
+
+        $db->transStart();
+
+        foreach ($questions as $question) {
+            $this->questionModel->insert($question);
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Failed to import questions. Please try again.'
+                );
+        }
+
+        return redirect()
+            ->to('/questions/create/' . $examId)
+            ->with(
+                'success',
+                count($questions) .
+                ' question(s) imported successfully from CSV.'
+            );
+    }
 
     public function edit($id)
     {
         $question = $this->questionModel->find($id);
 
         if (!$question) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
-        $exam = $this->examModel->find($question['exam_id']);
+        $exam = $this->examModel
+            ->where('id', $question['exam_id'])
+            ->where('examiner_id', session('user_id'))
+            ->first();
 
         if (!$exam) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
         return view('questions/edit', [
             'question' => $question,
-            'exam'     => $exam
+            'exam' => $exam
         ]);
     }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Update Question
-    |--------------------------------------------------------------------------
-    */
 
     public function update($id)
     {
         $question = $this->questionModel->find($id);
 
         if (!$question) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
+        }
+
+        $exam = $this->examModel
+            ->where('id', $question['exam_id'])
+            ->where('examiner_id', session('user_id'))
+            ->first();
+
+        if (!$exam) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
         $rules = [
-            'question'    => 'required|min_length[3]',
-            'option_a' => 'required',
-            'option_b' => 'required',
-            'option_c' => 'required',
-            'option_d' => 'required',
-            'correct_option' => 'required|in_list[A,B,C,D]',
-            'marks' => 'required|integer|greater_than[0]'
+            'question' =>
+                'required|min_length[3]',
+
+            'option_a' =>
+                'required',
+
+            'option_b' =>
+                'required',
+
+            'option_c' =>
+                'required',
+
+            'option_d' =>
+                'required',
+
+            'correct_option' =>
+                'required|in_list[A,B,C,D]',
+
+            'marks' =>
+                'required|integer|greater_than[0]'
         ];
 
         if (!$this->validate($rules)) {
+
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('errors', $this->validator->getErrors());
+                ->with(
+                    'errors',
+                    $this->validator->getErrors()
+                );
         }
 
         $questionData = [
-            'question'       => trim($this->request->getPost('question')),
-            'option_a'       => trim($this->request->getPost('option_a')),
-            'option_b'       => trim($this->request->getPost('option_b')),
-            'option_c'       => trim($this->request->getPost('option_c')),
-            'option_d'       => trim($this->request->getPost('option_d')),
-            'correct_option' => $this->request->getPost('correct_option'),
-            'marks'          => $this->request->getPost('marks')
+
+            'question' =>
+                trim(
+                    $this->request->getPost('question')
+                ),
+
+            'option_a' =>
+                trim(
+                    $this->request->getPost('option_a')
+                ),
+
+            'option_b' =>
+                trim(
+                    $this->request->getPost('option_b')
+                ),
+
+            'option_c' =>
+                trim(
+                    $this->request->getPost('option_c')
+                ),
+
+            'option_d' =>
+                trim(
+                    $this->request->getPost('option_d')
+                ),
+
+            'correct_option' =>
+                $this->request->getPost('correct_option'),
+
+            'marks' =>
+                $this->request->getPost('marks')
         ];
 
-        $this->questionModel->update($id, $questionData);
+        $this->questionModel->update(
+            $id,
+            $questionData
+        );
 
         return redirect()
-            ->to('/questions/create/' . $question['exam_id'])
-            ->with('success', 'Question updated successfully.');
+            ->to(
+                '/questions/create/' .
+                $question['exam_id']
+            )
+            ->with(
+                'success',
+                'Question updated successfully.'
+            );
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Delete Question
-    |--------------------------------------------------------------------------
-    */
 
     public function delete($id)
     {
         $question = $this->questionModel->find($id);
 
         if (!$question) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
+        }
+
+        $exam = $this->examModel
+            ->where('id', $question['exam_id'])
+            ->where('examiner_id', session('user_id'))
+            ->first();
+
+        if (!$exam) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound();
         }
 
         $examId = $question['exam_id'];
@@ -266,7 +592,9 @@ class QuestionController extends BaseController
 
         return redirect()
             ->to('/questions/create/' . $examId)
-            ->with('success', 'Question deleted successfully.');
+            ->with(
+                'success',
+                'Question deleted successfully.'
+            );
     }
-
 }

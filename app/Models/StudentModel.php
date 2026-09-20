@@ -24,6 +24,7 @@ class StudentModel extends Model
         'department',
         'phone',
         'password',
+        'plain_password',
         'status'
     ];
 

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta name="viewport"
@@ -14,6 +15,7 @@
 
     <link rel="stylesheet"
           href="<?= base_url('assets/css/exam.css') ?>">
+
 </head>
 
 <body>
@@ -23,16 +25,22 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
-            <h2 class="fw-bold">Edit Examination</h2>
+
+            <h2 class="fw-bold">
+                Edit Examination
+            </h2>
 
             <p class="text-muted mb-0">
                 Update your examination details.
             </p>
+
         </div>
 
         <a href="<?= base_url('/dashboard') ?>"
            class="btn btn-outline-secondary">
+
             ← Dashboard
+
         </a>
 
     </div>
@@ -70,7 +78,7 @@
                 <div class="row g-4">
 
 
-                    <!-- Title -->
+                    <!-- Examination Title -->
 
                     <div class="col-md-6">
 
@@ -78,10 +86,11 @@
                             Examination Title
                         </label>
 
-                        <input type="text"
-                               name="title"
-                               class="form-control"
-                               value="<?= esc(old('title', $exam['title'])) ?>">
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            value="<?= esc(old('title', $exam['title'])) ?>">
 
                     </div>
 
@@ -94,10 +103,11 @@
                             Subject
                         </label>
 
-                        <input type="text"
-                               name="subject"
-                               class="form-control"
-                               value="<?= esc(old('subject', $exam['subject'])) ?>">
+                        <input
+                            type="text"
+                            name="subject"
+                            class="form-control"
+                            value="<?= esc(old('subject', $exam['subject'])) ?>">
 
                     </div>
 
@@ -110,9 +120,10 @@
                             Description
                         </label>
 
-                        <textarea name="description"
-                                  class="form-control"
-                                  rows="3"><?= esc(old('description', $exam['description'])) ?></textarea>
+                        <textarea
+                            name="description"
+                            class="form-control"
+                            rows="3"><?= esc(old('description', $exam['description'])) ?></textarea>
 
                     </div>
 
@@ -125,9 +136,10 @@
                             Instructions
                         </label>
 
-                        <textarea name="instructions"
-                                  class="form-control"
-                                  rows="4"><?= esc(old('instructions', $exam['instructions'])) ?></textarea>
+                        <textarea
+                            name="instructions"
+                            class="form-control"
+                            rows="4"><?= esc(old('instructions', $exam['instructions'])) ?></textarea>
 
                     </div>
 
@@ -140,10 +152,12 @@
                             Duration (Minutes)
                         </label>
 
-                        <input type="number"
-                               name="duration"
-                               class="form-control"
-                               value="<?= esc(old('duration', $exam['duration'])) ?>">
+                        <input
+                            type="number"
+                            name="duration"
+                            class="form-control"
+                            min="1"
+                            value="<?= esc(old('duration', $exam['duration'])) ?>">
 
                     </div>
 
@@ -156,10 +170,12 @@
                             Total Marks
                         </label>
 
-                        <input type="number"
-                               name="total_marks"
-                               class="form-control"
-                               value="<?= esc(old('total_marks', $exam['total_marks'])) ?>">
+                        <input
+                            type="number"
+                            name="total_marks"
+                            class="form-control"
+                            min="1"
+                            value="<?= esc(old('total_marks', $exam['total_marks'])) ?>">
 
                     </div>
 
@@ -172,10 +188,12 @@
                             Passing Marks
                         </label>
 
-                        <input type="number"
-                               name="passing_marks"
-                               class="form-control"
-                               value="<?= esc(old('passing_marks', $exam['passing_marks'])) ?>">
+                        <input
+                            type="number"
+                            name="passing_marks"
+                            class="form-control"
+                            min="1"
+                            value="<?= esc(old('passing_marks', $exam['passing_marks'])) ?>">
 
                     </div>
 
@@ -188,10 +206,11 @@
                             Exam Date
                         </label>
 
-                        <input type="date"
-                               name="exam_date"
-                               class="form-control"
-                               value="<?= esc(old('exam_date', $exam['exam_date'])) ?>">
+                        <input
+                            type="date"
+                            name="exam_date"
+                            class="form-control"
+                            value="<?= esc(old('exam_date', $exam['exam_date'])) ?>">
 
                     </div>
 
@@ -204,10 +223,11 @@
                             Start Time
                         </label>
 
-                        <input type="time"
-                               name="start_time"
-                               class="form-control"
-                               value="<?= esc(old('start_time', $exam['start_time'])) ?>">
+                        <input
+                            type="time"
+                            name="start_time"
+                            class="form-control"
+                            value="<?= esc(old('start_time', $exam['start_time'])) ?>">
 
                     </div>
 
@@ -220,52 +240,11 @@
                             End Time
                         </label>
 
-                        <input type="time"
-                               name="end_time"
-                               class="form-control"
-                               value="<?= esc(old('end_time', $exam['end_time'])) ?>">
-
-                    </div>
-
-
-                    <!-- Maximum Attempts -->
-
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            Maximum Attempts
-                        </label>
-
-                        <input type="number"
-                               name="max_attempts"
-                               class="form-control"
-                               value="<?= esc(old('max_attempts', $exam['max_attempts'])) ?>">
-
-                    </div>
-
-
-                    <!-- Negative Marking -->
-
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            Negative Marking
-                        </label>
-
-                        <select name="negative_marking"
-                                class="form-select">
-
-                            <option value="No"
-                                <?= $exam['negative_marking'] === 'No' ? 'selected' : '' ?>>
-                                No
-                            </option>
-
-                            <option value="Yes"
-                                <?= $exam['negative_marking'] === 'Yes' ? 'selected' : '' ?>>
-                                Yes
-                            </option>
-
-                        </select>
+                        <input
+                            type="time"
+                            name="end_time"
+                            class="form-control"
+                            value="<?= esc(old('end_time', $exam['end_time'])) ?>">
 
                     </div>
 
@@ -278,40 +257,58 @@
                             Status
                         </label>
 
-                        <select name="status"
-                                class="form-select">
+                        <select
+                            name="status"
+                            class="form-select">
 
-                            <option value="Draft"
+                            <option
+                                value="Draft"
                                 <?= ($exam['status'] ?? '') === 'Draft' ? 'selected' : '' ?>>
+
                                 Draft
+
                             </option>
 
-                            <option value="Published"
+                            <option
+                                value="Published"
                                 <?= ($exam['status'] ?? '') === 'Published' ? 'selected' : '' ?>>
+
                                 Published
+
                             </option>
 
                         </select>
 
                     </div>
 
+
+                </div>
+
+
+                <!-- Action Buttons -->
+
                 <div class="d-flex justify-content-end gap-2 mt-5">
 
-                    <a href="<?= base_url('/dashboard') ?>"
-                       class="btn btn-light">
+                    <a
+                        href="<?= base_url('/dashboard') ?>"
+                        class="btn btn-light">
+
                         Cancel
+
                     </a>
 
-                    <button type="submit"
-                            class="btn btn-primary px-4">
+                    <button
+                        type="submit"
+                        class="btn btn-primary px-4">
 
-                        <i class="bi bi-check-circle"></i>
+                        <i class="bi bi-check-circle me-1"></i>
 
                         Update Examination
 
                     </button>
 
                 </div>
+
 
             </div>
 
@@ -320,6 +317,9 @@
     </form>
 
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

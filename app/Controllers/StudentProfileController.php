@@ -13,14 +13,17 @@ class StudentProfileController extends BaseController
         $this->studentModel = new StudentModel();
     }
 
+    /**
+     * Display student profile
+     */
     public function index()
     {
         $studentId = session('student_id');
 
-        if (!$studentId || !session('student_logged_in')) {
+        if (!$studentId) {
             return redirect()
                 ->to('/student/login')
-                ->with('error', 'Please login to continue.');
+                ->with('error', 'Please login to access your profile.');
         }
 
         $student = $this->studentModel
@@ -28,16 +31,9 @@ class StudentProfileController extends BaseController
             ->first();
 
         if (!$student) {
-            session()->remove([
-                'student_id',
-                'student_name',
-                'student_email',
-                'student_logged_in'
-            ]);
-
             return redirect()
-                ->to('/student/login')
-                ->with('error', 'Student account not found.');
+                ->to('/student/exams')
+                ->with('error', 'Unable to find your account.');
         }
 
         return view('student/profile', [
@@ -45,65 +41,165 @@ class StudentProfileController extends BaseController
         ]);
     }
 
+
+    /**
+     * Update student profile
+     */
     public function update()
     {
         $studentId = session('student_id');
 
-        if (!$studentId || !session('student_logged_in')) {
+        if (!$studentId) {
             return redirect()
                 ->to('/student/login')
-                ->with('error', 'Please login to continue.');
+                ->with('error', 'Please login to update your profile.');
         }
 
-        $rules = [
-            'name' => 'required|min_length[3]|max_length[100]',
-            'email' => 'required|valid_email|max_length[150]',
-            'department' => 'required|max_length[100]',
-            'phone' => 'permit_empty|max_length[20]'
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('errors', $this->validator->getErrors());
-        }
-
-        $email = strtolower(
-            trim($this->request->getPost('email'))
-        );
-
-        $existingStudent = $this->studentModel
-            ->where('email', $email)
-            ->where('id !=', $studentId)
+        $student = $this->studentModel
+            ->where('id', $studentId)
             ->first();
 
-        if ($existingStudent) {
+        if (!$student) {
+            return redirect()
+                ->to('/student/exams')
+                ->with('error', 'Unable to find your account.');
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validation Rules
+        |--------------------------------------------------------------------------
+        */
+
+        $rules = [
+            'name' => [
+                'label' => 'Full Name',
+                'rules' => 'required|min_length[2]|max_length[100]'
+            ],
+
+            'department' => [
+                'label' => 'Department',
+                'rules' => 'required|min_length[2]|max_length[150]'
+            ],
+
+            'phone' => [
+                'label' => 'Phone Number',
+                'rules' => 'required|numeric|min_length[10]|max_length[15]'
+            ],
+
+            'new_password' => [
+                'label' => 'New Password',
+                'rules' => 'permit_empty|min_length[6]|max_length[255]'
+            ],
+
+            'confirm_password' => [
+                'label' => 'Confirm Password',
+                'rules' => 'permit_empty|matches[new_password]'
+            ]
+        ];
+
+
+        if (!$this->validate($rules)) {
+
             return redirect()
                 ->back()
                 ->withInput()
                 ->with(
-                    'error',
-                    'Another student already exists with this email address.'
+                    'errors',
+                    $this->validator->getErrors()
                 );
         }
 
-        $data = [
-            'name' => trim($this->request->getPost('name')),
-            'email' => $email,
-            'department' => trim($this->request->getPost('department')),
-            'phone' => trim($this->request->getPost('phone'))
+
+        /*
+        |--------------------------------------------------------------------------
+        | Basic Profile Information
+        |--------------------------------------------------------------------------
+        */
+
+        $updateData = [
+            'name' => trim(
+                $this->request->getPost('name')
+            ),
+
+            'department' => trim(
+                $this->request->getPost('department')
+            ),
+
+            'phone' => trim(
+                $this->request->getPost('phone')
+            )
         ];
 
-        $this->studentModel->update($studentId, $data);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Password Update
+        |--------------------------------------------------------------------------
+        */
+
+        $newPassword = $this->request->getPost('new_password');
+
+        if (!empty($newPassword)) {
+
+            $updateData['password'] = password_hash(
+                $newPassword,
+                PASSWORD_DEFAULT
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Demo / Academic Project Password Storage
+            |--------------------------------------------------------------------------
+            |
+            | Your current project also contains plain_password because
+            | you previously requested the actual password to be visible
+            | in the student profile.
+            |
+            | This is NOT recommended for a real production system.
+            |
+            */
+
+            $updateData['plain_password'] = $newPassword;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Database
+        |--------------------------------------------------------------------------
+        */
+
+        $this->studentModel->update(
+            $studentId,
+            $updateData
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Session Information
+        |--------------------------------------------------------------------------
+        */
 
         session()->set([
-            'student_name' => $data['name'],
-            'student_email' => $data['email']
+            'student_name' => $updateData['name']
         ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Redirect
+        |--------------------------------------------------------------------------
+        */
 
         return redirect()
             ->to('/student/profile')
-            ->with('success', 'Profile updated successfully.');
+            ->with(
+                'success',
+                'Profile updated successfully.'
+            );
     }
 }

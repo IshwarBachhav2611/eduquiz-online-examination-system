@@ -15,14 +15,12 @@
     </title>
 
 
-    <!-- Bootstrap -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
 
-    <!-- Bootstrap Icons -->
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
@@ -37,19 +35,11 @@
         }
 
 
-        /* =========================================================
-           MAIN CONTAINER
-        ========================================================= */
-
         .result-wrapper {
             max-width: 1050px;
             margin: 40px auto;
         }
 
-
-        /* =========================================================
-           RESULT HEADER
-        ========================================================= */
 
         .result-card {
             background: #ffffff;
@@ -100,10 +90,6 @@
         }
 
 
-        /* =========================================================
-           SCORE
-        ========================================================= */
-
         .score {
             font-size: 58px;
             font-weight: 800;
@@ -117,10 +103,6 @@
             color: #64748b;
         }
 
-
-        /* =========================================================
-           STAT CARDS
-        ========================================================= */
 
         .stat-card {
             background: #f8fafc;
@@ -159,20 +141,12 @@
         }
 
 
-        /* =========================================================
-           ACTIONS
-        ========================================================= */
-
         .action-card {
             border: 1px solid #e2e8f0;
             border-radius: 16px;
             background: #ffffff;
         }
 
-
-        /* =========================================================
-           REVIEW SECTION
-        ========================================================= */
 
         .review-card {
             background: #ffffff;
@@ -216,10 +190,6 @@
             color: #0f172a;
         }
 
-
-        /* =========================================================
-           ANSWER BOX
-        ========================================================= */
 
         .answer-box {
             border-radius: 10px;
@@ -286,9 +256,27 @@
         }
 
 
-        /* =========================================================
-           PRINT
-        ========================================================= */
+        .option {
+            transition: 0.15s ease;
+        }
+
+
+        .option.correct-option {
+            border: 1px solid #22c55e !important;
+            background: #dcfce7 !important;
+        }
+
+
+        .option.wrong-option {
+            border: 1px solid #ef4444 !important;
+            background: #fee2e2 !important;
+        }
+
+
+        .option-selected {
+            font-weight: 600;
+        }
+
 
         @media print {
 
@@ -316,10 +304,6 @@
 
         }
 
-
-        /* =========================================================
-           MOBILE
-        ========================================================= */
 
         @media (max-width: 576px) {
 
@@ -357,13 +341,13 @@
     <div class="result-card shadow-sm p-4 p-md-5 mb-4">
 
         <?php
-            $isPassed =
-                isset($result['status']) &&
-                $result['status'] === 'Pass';
+
+        $isPassed =
+            isset($result['status']) &&
+            $result['status'] === 'Pass';
+
         ?>
 
-
-        <!-- Result Icon -->
 
         <div
             class="result-icon <?= $isPassed ? 'pass' : 'fail' ?>"
@@ -381,8 +365,6 @@
 
         </div>
 
-
-        <!-- Result Title -->
 
         <div class="text-center">
 
@@ -411,8 +393,6 @@
             </p>
 
 
-            <!-- Exam -->
-
             <div class="exam-title">
 
                 <?= esc($exam['title']) ?>
@@ -426,8 +406,6 @@
 
             </div>
 
-
-            <!-- Score -->
 
             <div class="mb-4">
 
@@ -456,15 +434,12 @@
         </div>
 
 
-
         <!-- =====================================================
              STATISTICS
         ====================================================== -->
 
         <div class="row g-3 mb-4">
 
-
-            <!-- Percentage -->
 
             <div class="col-md-3">
 
@@ -479,7 +454,9 @@
                     <div class="stat-value">
 
                         <?= esc(
-                            $attempt['percentage'] ?? 0
+                            $result['percentage']
+                            ?? $attempt['percentage']
+                            ?? 0
                         ) ?>%
 
                     </div>
@@ -488,8 +465,6 @@
 
             </div>
 
-
-            <!-- Correct -->
 
             <div class="col-md-3">
 
@@ -512,8 +487,6 @@
             </div>
 
 
-            <!-- Wrong -->
-
             <div class="col-md-3">
 
                 <div class="stat-card">
@@ -534,8 +507,6 @@
 
             </div>
 
-
-            <!-- Not Answered -->
 
             <div class="col-md-3">
 
@@ -558,7 +529,6 @@
             </div>
 
         </div>
-
 
 
         <!-- =====================================================
@@ -616,7 +586,6 @@
     </div>
 
 
-
     <!-- =========================================================
          ACTION BUTTONS
     ========================================================== -->
@@ -625,8 +594,6 @@
 
         <div class="row g-2">
 
-
-            <!-- See Exam -->
 
             <div class="col-md-4">
 
@@ -644,26 +611,24 @@
             </div>
 
 
-            <!-- Download Result -->
-
             <div class="col-md-4">
 
-                <button
-                    type="button"
+                <a
+                    href="<?= base_url(
+                        'student/exam/result/download/' .
+                        $attempt['id']
+                    ) ?>"
                     class="btn btn-outline-primary w-100"
-                    onclick="window.print()"
                 >
 
-                    <i class="bi bi-download me-2"></i>
+                    <i class="bi bi-file-earmark-pdf me-2"></i>
 
-                    Download Result
+                    Download Result PDF
 
-                </button>
+                </a>
 
             </div>
 
-
-            <!-- Back -->
 
             <div class="col-md-4">
 
@@ -684,7 +649,6 @@
         </div>
 
     </div>
-
 
 
     <!-- =========================================================
@@ -717,65 +681,136 @@
         </div>
 
 
+        <?php
+
+        /*
+        |--------------------------------------------------------------------------
+        | Build answer lookup
+        |--------------------------------------------------------------------------
+        |
+        | The controller provides $answers.
+        | We create:
+        |
+        | question_id => answer
+        |
+        | This allows every question to find the student's answer.
+        |
+        */
+
+        $answersByQuestion = [];
+
+        if (!empty($answers) && is_array($answers)) {
+
+            foreach ($answers as $answer) {
+
+                if (
+                    isset($answer['question_id']) &&
+                    $answer['question_id'] !== null
+                ) {
+
+                    $answersByQuestion[
+                        $answer['question_id']
+                    ] = $answer;
+
+                }
+
+            }
+
+        }
+
+        ?>
+
 
         <?php foreach ($questions as $index => $question): ?>
 
 
             <?php
 
-                $questionId =
-                    $question['id'];
-
-                $studentAnswer =
-                    $answersByQuestion[$questionId]
-                    ?? null;
+            $questionId =
+                $question['id'];
 
 
-                $selectedOption =
-                    $studentAnswer['selected_option']
-                    ?? null;
+            $studentAnswer =
+                $answersByQuestion[$questionId]
+                ?? null;
 
 
-                $correctOption =
-                    $question['correct_option'];
+            $selectedOption =
+                $studentAnswer['selected_option']
+                ?? null;
 
 
-                $isAnswered =
-                    $selectedOption !== null &&
-                    $selectedOption !== '';
+            $correctOption =
+                $question['correct_option']
+                ?? null;
 
 
-                $isCorrect =
-                    $isAnswered &&
-                    $selectedOption === $correctOption;
+            /*
+            |--------------------------------------------------------------------------
+            | Normalize answer values
+            |--------------------------------------------------------------------------
+            */
+
+            if ($selectedOption !== null) {
+
+                $selectedOption = strtoupper(
+                    trim((string) $selectedOption)
+                );
+
+            }
 
 
-                if ($isCorrect) {
+            if ($correctOption !== null) {
 
-                    $statusClass = 'correct';
+                $correctOption = strtoupper(
+                    trim((string) $correctOption)
+                );
 
-                } elseif ($isAnswered) {
-
-                    $statusClass = 'wrong';
-
-                } else {
-
-                    $statusClass = 'unanswered';
-
-                }
+            }
 
 
-                $options = [
+            /*
+            |--------------------------------------------------------------------------
+            | Determine answer status
+            |--------------------------------------------------------------------------
+            */
 
-                    'A' => $question['option_a'],
+            $isAnswered =
+                $selectedOption !== null &&
+                $selectedOption !== '';
 
-                    'B' => $question['option_b'],
 
-                    'C' => $question['option_c'],
+            $isCorrect =
+                $isAnswered &&
+                $selectedOption === $correctOption;
 
-                    'D' => $question['option_d']
 
-                ];
+            if ($isCorrect) {
+
+                $statusClass = 'correct';
+
+            } elseif ($isAnswered) {
+
+                $statusClass = 'wrong';
+
+            } else {
+
+                $statusClass = 'unanswered';
+
+            }
+
+
+            $options = [
+
+                'A' => $question['option_a'],
+
+                'B' => $question['option_b'],
+
+                'C' => $question['option_c'],
+
+                'D' => $question['option_d']
+
+            ];
 
             ?>
 
@@ -785,7 +820,9 @@
             >
 
 
-                <!-- Question Header -->
+                <!-- =================================================
+                     QUESTION HEADER
+                ================================================== -->
 
                 <div
                     class="question-header d-flex align-items-start gap-3"
@@ -823,7 +860,6 @@
                 </div>
 
 
-
                 <!-- =================================================
                      ALL OPTIONS
                 ================================================== -->
@@ -836,24 +872,34 @@
 
                         <?php
 
-                            $optionIsCorrect =
-                                $letter === $correctOption;
+                        $optionIsCorrect =
+                            $letter === $correctOption;
 
-                            $optionWasSelected =
-                                $letter === $selectedOption;
+
+                        $optionWasSelected =
+                            $letter === $selectedOption;
+
+
+                        $optionClass = '';
+
+
+                        if ($optionIsCorrect) {
+
+                            $optionClass =
+                                'correct-option';
+
+                        } elseif ($optionWasSelected) {
+
+                            $optionClass =
+                                'wrong-option';
+
+                        }
 
                         ?>
 
 
                         <div
-                            class="border rounded-3 p-3 mb-2
-                            <?php
-                                if ($optionIsCorrect) {
-                                    echo 'border-success bg-success-subtle';
-                                } elseif ($optionWasSelected) {
-                                    echo 'border-danger bg-danger-subtle';
-                                }
-                            ?>"
+                            class="option border rounded-3 p-3 mb-2 <?= $optionClass ?>"
                         >
 
                             <div
@@ -884,6 +930,7 @@
 
                                     </span>
 
+
                                 <?php elseif ($optionWasSelected): ?>
 
                                     <span
@@ -896,6 +943,7 @@
 
                                 <?php endif; ?>
 
+
                             </div>
 
                         </div>
@@ -907,13 +955,14 @@
                 </div>
 
 
-
                 <!-- =================================================
-                     RESULT FOR QUESTION
+                     QUESTION RESULT
                 ================================================== -->
 
                 <?php if ($isCorrect): ?>
 
+
+                    <!-- CORRECT -->
 
                     <div class="answer-box correct">
 
@@ -930,10 +979,15 @@
 
                                 <div class="answer-text">
 
-                                    <?= esc($selectedOption) ?>.
+                                    <strong>
+
+                                        <?= esc($selectedOption) ?>.
+
+                                    </strong>
 
                                     <?= esc(
                                         $options[$selectedOption]
+                                        ?? ''
                                     ) ?>
 
                                 </div>
@@ -957,6 +1011,7 @@
                                 <div class="marks text-success">
 
                                     +
+
                                     <?= esc(
                                         $studentAnswer['marks_obtained']
                                         ?? $question['marks']
@@ -976,6 +1031,8 @@
                 <?php elseif ($isAnswered): ?>
 
 
+                    <!-- WRONG ANSWER -->
+
                     <div class="answer-box wrong">
 
                         <div class="d-flex justify-content-between">
@@ -991,10 +1048,15 @@
 
                                 <div class="answer-text">
 
-                                    <?= esc($selectedOption) ?>.
+                                    <strong>
+
+                                        <?= esc($selectedOption) ?>.
+
+                                    </strong>
 
                                     <?= esc(
                                         $options[$selectedOption]
+                                        ?? ''
                                     ) ?>
 
                                 </div>
@@ -1033,6 +1095,8 @@
                     </div>
 
 
+                    <!-- CORRECT ANSWER -->
+
                     <div class="answer-box correct">
 
                         <div class="answer-label">
@@ -1052,6 +1116,7 @@
 
                             <?= esc(
                                 $options[$correctOption]
+                                ?? ''
                             ) ?>
 
                         </div>
@@ -1061,6 +1126,8 @@
 
                 <?php else: ?>
 
+
+                    <!-- NOT ANSWERED -->
 
                     <div class="answer-box unanswered">
 
@@ -1110,6 +1177,8 @@
                     </div>
 
 
+                    <!-- CORRECT ANSWER -->
+
                     <div class="answer-box correct">
 
                         <div class="answer-label">
@@ -1129,6 +1198,7 @@
 
                             <?= esc(
                                 $options[$correctOption]
+                                ?? ''
                             ) ?>
 
                         </div>
@@ -1146,7 +1216,6 @@
 
 
     </div>
-
 
 
     <!-- =========================================================

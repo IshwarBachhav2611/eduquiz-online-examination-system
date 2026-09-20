@@ -28,12 +28,6 @@ class StudentController extends BaseController
         $this->resultModel = new ResultModel();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | STUDENT LIST
-    |--------------------------------------------------------------------------
-    */
-
     public function index()
     {
         $examinerId = session('user_id');
@@ -56,24 +50,10 @@ class StudentController extends BaseController
         ]);
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | ADD STUDENT PAGE
-    |--------------------------------------------------------------------------
-    */
-
     public function create()
     {
         return view('students/create');
     }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | CREATE NEW / ADD EXISTING STUDENT
-    |--------------------------------------------------------------------------
-    */
 
     public function store()
     {
@@ -99,22 +79,9 @@ class StudentController extends BaseController
 
         $examinerId = session('user_id');
 
-        /*
-        |--------------------------------------------------------------------------
-        | CHECK IF STUDENT ACCOUNT ALREADY EXISTS
-        |--------------------------------------------------------------------------
-        */
-
         $existingStudent = $this->studentModel
             ->where('email', $email)
             ->first();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | EXISTING STUDENT
-        |--------------------------------------------------------------------------
-        */
 
         if ($existingStudent) {
 
@@ -152,13 +119,6 @@ class StudentController extends BaseController
                 );
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | CREATE NEW STUDENT ACCOUNT
-        |--------------------------------------------------------------------------
-        */
-
         $plainPassword = bin2hex(
             random_bytes(4)
         );
@@ -179,9 +139,10 @@ class StudentController extends BaseController
                 PASSWORD_DEFAULT
             ),
 
+            'plain_password' => $plainPassword,
+
             'status' => 'Active'
         ]);
-
 
         if (!$studentId) {
             return redirect()
@@ -193,24 +154,10 @@ class StudentController extends BaseController
                 );
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | CONNECT STUDENT WITH CURRENT TEACHER
-        |--------------------------------------------------------------------------
-        */
-
         $this->examinerStudentModel->insert([
             'examiner_id' => $examinerId,
             'student_id' => $studentId
         ]);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | SUCCESS
-        |--------------------------------------------------------------------------
-        */
 
         return redirect()
             ->to('/students')
@@ -226,13 +173,6 @@ class StudentController extends BaseController
                 ]
             );
     }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | ADD EXISTING STUDENT
-    |--------------------------------------------------------------------------
-    */
 
     public function addExisting($studentId)
     {
@@ -284,24 +224,6 @@ class StudentController extends BaseController
             );
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | REMOVE STUDENT FROM MY LIST
-    |--------------------------------------------------------------------------
-    |
-    | IMPORTANT:
-    |
-    | This NEVER deletes the student account.
-    |
-    | It only deletes:
-    |
-    | examiner_students
-    |
-    | for the current teacher + student relationship.
-    |
-    */
-
     public function delete($studentId)
     {
         $examinerId = session('user_id');
@@ -341,23 +263,9 @@ class StudentController extends BaseController
             );
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | VIEW STUDENT + TEACHER-SPECIFIC PROGRESS
-    |--------------------------------------------------------------------------
-    */
-
     public function view($studentId)
     {
         $examinerId = session('user_id');
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | VERIFY STUDENT BELONGS TO CURRENT TEACHER
-        |--------------------------------------------------------------------------
-        */
 
         $student = $this->studentModel
             ->select('students.*')
@@ -380,13 +288,6 @@ class StudentController extends BaseController
                 ::forPageNotFound();
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | GET CURRENT TEACHER'S EXAMS
-        |--------------------------------------------------------------------------
-        */
-
         $teacherExams = $this->examModel
             ->select('exams.*')
             ->where(
@@ -395,19 +296,11 @@ class StudentController extends BaseController
             )
             ->findAll();
 
-
         $examIds = [];
 
         foreach ($teacherExams as $exam) {
             $examIds[] = $exam['id'];
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | DEFAULT PROGRESS VALUES
-        |--------------------------------------------------------------------------
-        */
 
         $totalAssigned = 0;
         $attempted = 0;
@@ -420,20 +313,7 @@ class StudentController extends BaseController
 
         $recentResults = [];
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | NO EXAMS
-        |--------------------------------------------------------------------------
-        */
-
         if (!empty($examIds)) {
-
-            /*
-            |--------------------------------------------------------------------------
-            | TOTAL ASSIGNED EXAMS
-            |--------------------------------------------------------------------------
-            */
 
             $totalAssigned = $this->examStudentModel
                 ->where(
@@ -445,13 +325,6 @@ class StudentController extends BaseController
                     $examIds
                 )
                 ->countAllResults();
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | COMPLETED ATTEMPTS
-            |--------------------------------------------------------------------------
-            */
 
             $attempts = $this->attemptModel
                 ->select(
@@ -479,18 +352,14 @@ class StudentController extends BaseController
                 )
                 ->findAll();
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | USE ONE COMPLETED ATTEMPT PER EXAM
-            |--------------------------------------------------------------------------
-            */
-
             $processedExams = [];
 
             foreach ($attempts as $attempt) {
 
-                if (in_array($attempt['exam_id'], $processedExams)) {
+                if (in_array(
+                    $attempt['exam_id'],
+                    $processedExams
+                )) {
                     continue;
                 }
 
@@ -501,13 +370,6 @@ class StudentController extends BaseController
                 $percentage = (float) $attempt['percentage'];
 
                 $percentages[] = $percentage;
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | PASS / FAIL
-                |--------------------------------------------------------------------------
-                */
 
                 $result = $this->resultModel
                     ->where(
@@ -525,13 +387,6 @@ class StudentController extends BaseController
                     }
                 }
 
-
-                /*
-                |--------------------------------------------------------------------------
-                | RECENT RESULTS
-                |--------------------------------------------------------------------------
-                */
-
                 $recentResults[] = [
                     'attempt_id' => $attempt['id'],
                     'title' => $attempt['title'],
@@ -544,13 +399,6 @@ class StudentController extends BaseController
                     'submitted_at' => $attempt['submitted_at']
                 ];
             }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | ATTEMPTED EXAMS
-            |--------------------------------------------------------------------------
-            */
 
             $attempted = $this->attemptModel
                 ->select('attempts.exam_id')
@@ -571,13 +419,6 @@ class StudentController extends BaseController
                 )
                 ->countAllResults();
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | PERFORMANCE CALCULATIONS
-        |--------------------------------------------------------------------------
-        */
 
         $averagePercentage = 0;
         $highestPercentage = 0;
@@ -600,13 +441,6 @@ class StudentController extends BaseController
             $passPercentage =
                 ($passed / $completed) * 100;
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | RETURN VIEW
-        |--------------------------------------------------------------------------
-        */
 
         return view('students/view', [
 
@@ -638,13 +472,6 @@ class StudentController extends BaseController
         ]);
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | DYNAMIC STUDENT SEARCH
-    |--------------------------------------------------------------------------
-    */
-
     public function search()
     {
         $query = trim(
@@ -664,7 +491,6 @@ class StudentController extends BaseController
             ->orderBy('name', 'ASC')
             ->findAll(10);
 
-
         $linkedStudentIds = $this->examinerStudentModel
             ->where(
                 'examiner_id',
@@ -672,11 +498,9 @@ class StudentController extends BaseController
             )
             ->findColumn('student_id');
 
-
         if (!$linkedStudentIds) {
             $linkedStudentIds = [];
         }
-
 
         $results = [];
 
@@ -693,7 +517,6 @@ class StudentController extends BaseController
                 )
             ];
         }
-
 
         return $this->response
             ->setJSON($results);

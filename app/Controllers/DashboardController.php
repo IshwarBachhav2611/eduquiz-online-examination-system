@@ -40,6 +40,15 @@ class DashboardController extends BaseController
 
         /*
         |--------------------------------------------------------------------------
+        | Get Only 3 Newest Examinations for Dashboard
+        |--------------------------------------------------------------------------
+        */
+
+        $recentExams = array_slice($exams, 0, 3);
+
+
+        /*
+        |--------------------------------------------------------------------------
         | Statistics
         |--------------------------------------------------------------------------
         */
@@ -106,7 +115,11 @@ class DashboardController extends BaseController
 
         $data = [
 
+            // All exams - used for statistics
             'exams' => $exams,
+
+            // Only 3 newest exams - used for dashboard display
+            'recentExams' => $recentExams,
 
             'totalExams' => $totalExams,
 

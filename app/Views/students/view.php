@@ -131,26 +131,6 @@
             margin: 0;
         }
 
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .info-row:last-child {
-            border-bottom: 0;
-        }
-
-        .info-label {
-            color: #64748b;
-        }
-
-        .info-value {
-            font-weight: 600;
-            text-align: right;
-        }
-
         .result-table th {
             color: #64748b;
             font-size: 13px;
@@ -180,11 +160,6 @@
             border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
-        }
-
-        .progress {
-            height: 9px;
-            border-radius: 10px;
         }
 
         @media (max-width: 768px) {
@@ -221,8 +196,11 @@
                 href="<?= base_url('students') ?>"
                 class="back-link"
             >
+
                 <i class="bi bi-arrow-left me-1"></i>
+
                 Back to Students
+
             </a>
 
         </div>
@@ -275,10 +253,12 @@
                     </div>
 
                     <strong>
+
                         <?= !empty($student['department'])
                             ? esc($student['department'])
                             : 'Not provided'
                         ?>
+
                     </strong>
 
                 </div>
@@ -291,10 +271,12 @@
                     </div>
 
                     <strong>
+
                         <?= !empty($student['phone'])
                             ? esc($student['phone'])
                             : 'Not provided'
                         ?>
+
                     </strong>
 
                 </div>
@@ -307,7 +289,9 @@
                     </div>
 
                     <span class="badge text-bg-success">
+
                         <?= esc($student['status']) ?>
+
                     </span>
 
                 </div>
@@ -346,20 +330,28 @@
 
         <div class="row g-4">
 
+            <!-- ALL ASSIGNED -->
+
             <div class="col-lg-3 col-md-6">
 
                 <div class="stat-card">
 
                     <div class="stat-icon">
+
                         <i class="bi bi-clipboard-check"></i>
+
                     </div>
 
                     <div class="stat-value">
+
                         <?= $totalAssigned ?>
+
                     </div>
 
                     <div class="stat-label">
-                        Exams Assigned
+
+                        All Exams Assigned
+
                     </div>
 
                 </div>
@@ -367,41 +359,28 @@
             </div>
 
 
-            <div class="col-lg-3 col-md-6">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        <i class="bi bi-pencil-square"></i>
-                    </div>
-
-                    <div class="stat-value">
-                        <?= $attempted ?>
-                    </div>
-
-                    <div class="stat-label">
-                        Exams Attempted
-                    </div>
-
-                </div>
-
-            </div>
-
+            <!-- COMPLETED -->
 
             <div class="col-lg-3 col-md-6">
 
                 <div class="stat-card">
 
                     <div class="stat-icon">
+
                         <i class="bi bi-check2-circle"></i>
+
                     </div>
 
                     <div class="stat-value">
+
                         <?= $completed ?>
+
                     </div>
 
                     <div class="stat-label">
+
                         Completed Exams
+
                     </div>
 
                 </div>
@@ -409,147 +388,58 @@
             </div>
 
 
-            <div class="col-lg-3 col-md-6">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        <i class="bi bi-bar-chart"></i>
-                    </div>
-
-                    <div class="stat-value">
-                        <?= number_format($averagePercentage, 1) ?>%
-                    </div>
-
-                    <div class="stat-label">
-                        Average Percentage
-                    </div>
-
-                </div>
-
-            </div>
-
+            <!-- PASSED -->
 
             <div class="col-lg-3 col-md-6">
 
                 <div class="stat-card">
 
                     <div class="stat-icon">
-                        <i class="bi bi-trophy"></i>
-                    </div>
 
-                    <div class="stat-value">
-                        <?= number_format($highestPercentage, 1) ?>%
-                    </div>
-
-                    <div class="stat-label">
-                        Highest Score
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="col-lg-3 col-md-6">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        <i class="bi bi-arrow-down-circle"></i>
-                    </div>
-
-                    <div class="stat-value">
-                        <?= number_format($lowestPercentage, 1) ?>%
-                    </div>
-
-                    <div class="stat-label">
-                        Lowest Score
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="col-lg-3 col-md-6">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
                         <i class="bi bi-check-circle"></i>
+
                     </div>
 
                     <div class="stat-value">
+
                         <?= $passed ?>
+
                     </div>
 
                     <div class="stat-label">
+
                         Exams Passed
+
                     </div>
 
                 </div>
 
             </div>
 
+
+            <!-- FAILED -->
 
             <div class="col-lg-3 col-md-6">
 
                 <div class="stat-card">
 
                     <div class="stat-icon">
+
                         <i class="bi bi-x-circle"></i>
+
                     </div>
 
                     <div class="stat-value">
+
                         <?= $failed ?>
+
                     </div>
 
                     <div class="stat-label">
+
                         Exams Failed
+
                     </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- PASS RATE -->
-
-        <div class="section-card mt-4">
-
-            <div class="section-header">
-
-                <h4>
-                    <i class="bi bi-speedometer2 me-2"></i>
-                    Pass Rate
-                </h4>
-
-            </div>
-
-            <div class="p-4">
-
-                <div class="d-flex justify-content-between mb-2">
-
-                    <span class="text-muted">
-                        Overall Pass Percentage
-                    </span>
-
-                    <strong>
-                        <?= number_format($passPercentage, 1) ?>%
-                    </strong>
-
-                </div>
-
-                <div class="progress">
-
-                    <div
-                        class="progress-bar"
-                        role="progressbar"
-                        style="width: <?= min(100, max(0, $passPercentage)) ?>%;"
-                    ></div>
 
                 </div>
 
@@ -565,8 +455,11 @@
             <div class="section-header">
 
                 <h4>
+
                     <i class="bi bi-clock-history me-2"></i>
+
                     Recent Examination Results
+
                 </h4>
 
             </div>
@@ -616,13 +509,21 @@
                                 <td class="ps-4">
 
                                     <div class="fw-semibold">
-                                        <?= esc($result['title']) ?>
+
+                                        <?= esc(
+                                            $result['title']
+                                        ) ?>
+
                                     </div>
 
                                     <?php if (!empty($result['subject'])): ?>
 
                                         <small class="text-muted">
-                                            <?= esc($result['subject']) ?>
+
+                                            <?= esc(
+                                                $result['subject']
+                                            ) ?>
+
                                         </small>
 
                                     <?php endif; ?>
@@ -632,10 +533,14 @@
 
                                 <td>
 
-                                    <?= !empty($result['exam_date'])
+                                    <?= !empty(
+                                        $result['exam_date']
+                                    )
                                         ? date(
                                             'd M Y',
-                                            strtotime($result['exam_date'])
+                                            strtotime(
+                                                $result['exam_date']
+                                            )
                                         )
                                         : '—'
                                     ?>
@@ -646,12 +551,21 @@
                                 <td>
 
                                     <strong>
-                                        <?= esc($result['score']) ?>
+
+                                        <?= esc(
+                                            $result['score']
+                                        ) ?>
+
                                     </strong>
 
                                     <span class="text-muted">
+
                                         /
-                                        <?= esc($result['total_marks']) ?>
+
+                                        <?= esc(
+                                            $result['total_marks']
+                                        ) ?>
+
                                     </span>
 
                                 </td>
@@ -660,10 +574,12 @@
                                 <td>
 
                                     <strong>
+
                                         <?= number_format(
                                             $result['percentage'],
                                             1
                                         ) ?>%
+
                                     </strong>
 
                                 </td>
@@ -671,21 +587,31 @@
 
                                 <td>
 
-                                    <?php if ($result['status'] === 'Pass'): ?>
+                                    <?php if (
+                                        $result['status'] === 'Pass'
+                                    ): ?>
 
-                                        <span class="status-badge pass-badge">
+                                        <span
+                                            class="status-badge pass-badge"
+                                        >
                                             Pass
                                         </span>
 
-                                    <?php elseif ($result['status'] === 'Fail'): ?>
+                                    <?php elseif (
+                                        $result['status'] === 'Fail'
+                                    ): ?>
 
-                                        <span class="status-badge fail-badge">
+                                        <span
+                                            class="status-badge fail-badge"
+                                        >
                                             Fail
                                         </span>
 
                                     <?php else: ?>
 
-                                        <span class="status-badge bg-light text-dark">
+                                        <span
+                                            class="status-badge bg-light text-dark"
+                                        >
                                             Completed
                                         </span>
 
@@ -708,7 +634,9 @@
                 <div class="text-center py-5 px-3">
 
                     <div class="fs-1 text-muted mb-3">
+
                         <i class="bi bi-bar-chart"></i>
+
                     </div>
 
                     <h5 class="fw-bold">
@@ -716,7 +644,10 @@
                     </h5>
 
                     <p class="text-muted mb-0">
-                        This student has not completed any of your examinations yet.
+
+                        This student has not completed any
+                        of your examinations yet.
+
                     </p>
 
                 </div>
@@ -724,7 +655,6 @@
             <?php endif; ?>
 
         </div>
-
 
     </div>
 
